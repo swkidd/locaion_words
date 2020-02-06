@@ -5,10 +5,8 @@ import Error from './Error'
 import { Auth } from 'aws-amplify'
 
 const initialState = {
-  username: ``,
-  password: ``,
   email: '',
-  phone_number: '',
+  password: ``,
   authCode: '',
   stage: 0,
   error: ''
@@ -23,11 +21,17 @@ class SignUp extends React.Component {
       [event.target.name]: event.target.value,
     })
   }
+  
+  onFormSubmit = (event) => {
+    event.preventDefault();
+    this.signUp();
+  }
 
   signUp = async() => {
-    const { username, password, email, phone_number } = this.state
+    const { email, password } = this.state
     try {
-      await Auth.signUp({ username, password, attributes: { email, phone_number }})
+      //use email as username
+      await Auth.signUp({ username: email, password, attributes: { email }})
       this.setState({ stage: 1 })
     } catch (err) {
       this.setState({ error: err })
@@ -36,9 +40,9 @@ class SignUp extends React.Component {
   }
 
   confirmSignUp = async() => {
-    const { username, authCode } = this.state
+    const { email, authCode } = this.state
     try {
-      await Auth.confirmSignUp(username, authCode)
+      await Auth.confirmSignUp(email, authCode)
       alert('Successfully signed up!')
       navigate("/app/login")
     } catch (err) {
@@ -53,13 +57,14 @@ class SignUp extends React.Component {
         <h1>Sign Up</h1>
         {
           this.state.stage === 0 && (
-            <div style={styles.formContainer}>
+            <form onSubmit={this.onFormSubmit} style={styles.formContainer}>
               {this.state.error && <Error errorMessage={this.state.error}/>}
               <input
                 onChange={this.handleUpdate}
-                placeholder='Username'
-                name='username'
-                value={this.state.username}
+                placeholder='Email'
+                name='email'
+                value={this.state.email}
+                type="email"
                 style={styles.input}
               />
               <input
@@ -70,24 +75,10 @@ class SignUp extends React.Component {
                 type='password'
                 style={styles.input}
               />
-              <input
-                onChange={this.handleUpdate}
-                placeholder='Email'
-                name='email'
-                value={this.state.email}
-                style={styles.input}
-              />
-              <input
-                onChange={this.handleUpdate}
-                placeholder='Phone Number'
-                name='phone_number'
-                value={this.state.phone_number}
-                style={styles.input}
-              />
-              <div style={styles.button} onClick={this.signUp}>
+              <button type="submit" style={styles.button}>
                 <span style={styles.buttonText}>Sign Up</span>
-              </div>
-            </div>
+              </button>
+            </form >
           )
         }
         {

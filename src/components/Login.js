@@ -7,7 +7,7 @@ import { Auth } from 'aws-amplify'
 
 class Login extends React.Component {
   state = {
-    username: ``,
+    email: ``,
     password: ``,
     error: ``
   }
@@ -17,11 +17,16 @@ class Login extends React.Component {
       [event.target.name]: event.target.value,
     })
   }
+  
+  onFormSubmit = (event) => {
+    event.preventDefault();
+    this.login();
+  }
 
   login = async() => {
-    const { username, password } = this.state
+    const { email, password } = this.state
     try {
-      await Auth.signIn(username, password)
+      await Auth.signIn(email, password)
       const user = await Auth.currentAuthenticatedUser()
       const userInfo = {
         ...user.attributes,
@@ -41,12 +46,13 @@ class Login extends React.Component {
       <div>
         <h1>Sign In</h1>
         {this.state.error && <Error errorMessage={this.state.error}/>}
-        <div style={styles.formContainer}>
+        <form onSubmit={this.onFormSubmit} style={styles.formContainer}>
          <input
             onChange={this.handleUpdate}
-            placeholder='Username'
-            name='username'
-            value={this.state.username}
+            placeholder='Email'
+            name='email'
+            value={this.state.email}
+            type='email'
             style={styles.input}
           />
           <input
@@ -57,10 +63,10 @@ class Login extends React.Component {
             type='password'
             style={styles.input}
           />
-          <div style={styles.button} onClick={this.login}>
+          <button type="submit" style={styles.button}>
             <span style={styles.buttonText}>Sign In</span>
-          </div>
-        </div>
+          </button>
+        </form>
         <Link to="/app/signup">Sign Up</Link><br />
       </div>
     )

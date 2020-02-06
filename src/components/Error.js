@@ -7,6 +7,7 @@ const Error = props => (
             <pre err={err}>
             <strong>{err}: </strong>
             {JSON.stringify(val, '', ' ')}
+            {JSON.stringify(process.env, '', ' ')}
             <br/>
             <a
             href="https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html">AWS Cognito User Pool documentation.</a>

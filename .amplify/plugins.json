@@ -1,0 +1,414 @@
+{
+    "pluginDirectories": [
+        "cli-local-node-modules",
+        "cli-parent-directory",
+        "global-node-modules"
+    ],
+    "pluginPrefixes": [
+        "amplify-"
+    ],
+    "userAddedLocations": [],
+    "lastScanTime": "2020-02-05T13:32:34.259Z",
+    "maxScanIntervalInSeconds": 86400,
+    "plugins": {
+        "core": [
+            {
+                "packageName": "@aws-amplify/cli",
+                "packageVersion": "4.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/",
+                "manifest": {
+                    "name": "core",
+                    "type": "core",
+                    "commands": [
+                        "categories",
+                        "configure",
+                        "console",
+                        "delete",
+                        "env",
+                        "help",
+                        "init",
+                        "migrate",
+                        "publish",
+                        "push",
+                        "pull",
+                        "run",
+                        "status",
+                        "plugin",
+                        "version"
+                    ],
+                    "commandAliases": {
+                        "h": "help",
+                        "serve": "run",
+                        "ls": "status"
+                    }
+                }
+            }
+        ],
+        "analytics": [
+            {
+                "packageName": "amplify-category-analytics",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-analytics",
+                "manifest": {
+                    "name": "analytics",
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "remove",
+                        "push",
+                        "console",
+                        "help"
+                    ],
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "api": [
+            {
+                "packageName": "amplify-category-api",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-api",
+                "manifest": {
+                    "name": "api",
+                    "type": "category",
+                    "commands": [
+                        "add-graphql-datasource",
+                        "add",
+                        "console",
+                        "gql-compile",
+                        "push",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "configure": "update"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "auth": [
+            {
+                "packageName": "amplify-category-auth",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth",
+                "manifest": {
+                    "name": "auth",
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "console",
+                        "enable",
+                        "push",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "function": [
+            {
+                "packageName": "amplify-category-function",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-function",
+                "manifest": {
+                    "name": "function",
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "build",
+                        "console",
+                        "invoke",
+                        "push",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "configure": "update"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "hosting": [
+            {
+                "packageName": "amplify-category-hosting",
+                "packageVersion": "2.1.9",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-hosting",
+                "manifest": {
+                    "name": "hosting",
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "configure",
+                        "console",
+                        "push",
+                        "remove",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "enable": "add",
+                        "update": "configure"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "interactions": [
+            {
+                "packageName": "amplify-category-interactions",
+                "packageVersion": "2.1.9",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-interactions",
+                "manifest": {
+                    "name": "interactions",
+                    "aliases": [
+                        "interaction"
+                    ],
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "push",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "configure": "update"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "notifications": [
+            {
+                "packageName": "amplify-category-notifications",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-notifications",
+                "manifest": {
+                    "name": "notifications",
+                    "aliases": [
+                        "notification"
+                    ],
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "configure",
+                        "console",
+                        "remove",
+                        "status",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "enable": "add",
+                        "update": "configure",
+                        "disable": "remove",
+                        "delete": "remove",
+                        "list": "status",
+                        "ls": "status"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "predictions": [
+            {
+                "packageName": "amplify-category-predictions",
+                "packageVersion": "2.1.9",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-predictions",
+                "manifest": {
+                    "name": "predictions",
+                    "aliases": [
+                        "Predictions"
+                    ],
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "console",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "configure": "update"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "storage": [
+            {
+                "packageName": "amplify-category-storage",
+                "packageVersion": "2.1.9",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-storage",
+                "manifest": {
+                    "name": "storage",
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "console",
+                        "push",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "configure": "update"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "xr": [
+            {
+                "packageName": "amplify-category-xr",
+                "packageVersion": "2.1.9",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-xr",
+                "manifest": {
+                    "name": "xr",
+                    "aliases": [
+                        "XR"
+                    ],
+                    "type": "category",
+                    "commands": [
+                        "add",
+                        "console",
+                        "push",
+                        "remove",
+                        "update",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "configure": "update"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "codegen": [
+            {
+                "packageName": "amplify-codegen",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-codegen",
+                "manifest": {
+                    "name": "codegen",
+                    "type": "util",
+                    "commands": [
+                        "add",
+                        "codegen",
+                        "configure",
+                        "remove",
+                        "statements",
+                        "types",
+                        "models"
+                    ],
+                    "commandAliases": {
+                        "update": "configure",
+                        "statement": "statements",
+                        "model": "models"
+                    },
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "android": [
+            {
+                "packageName": "amplify-frontend-android",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-android",
+                "manifest": {
+                    "name": "android",
+                    "type": "frontend",
+                    "commands": [
+                        "help"
+                    ],
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "ios": [
+            {
+                "packageName": "amplify-frontend-ios",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-ios",
+                "manifest": {
+                    "name": "ios",
+                    "type": "frontend",
+                    "commands": [
+                        "help"
+                    ],
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "javascript": [
+            {
+                "packageName": "amplify-frontend-javascript",
+                "packageVersion": "2.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-frontend-javascript",
+                "manifest": {
+                    "name": "javascript",
+                    "aliases": [
+                        "js"
+                    ],
+                    "type": "frontend",
+                    "commands": [
+                        "help"
+                    ],
+                    "eventHandlers": []
+                }
+            }
+        ],
+        "awscloudformation": [
+            {
+                "packageName": "amplify-provider-awscloudformation",
+                "packageVersion": "4.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-provider-awscloudformation",
+                "manifest": {
+                    "name": "awscloudformation",
+                    "aliases": [
+                        "awscfn",
+                        "aws"
+                    ],
+                    "type": "provider",
+                    "commands": [
+                        "configure",
+                        "console",
+                        "reset-cache",
+                        "setupNewUser",
+                        "help"
+                    ],
+                    "commandAliases": {
+                        "resetCache": "reset-cache",
+                        "setup-new-user": "setupNewUser",
+                        "newUser": "setupNewUser",
+                        "new-user": "setupNewUser"
+                    }
+                }
+            }
+        ],
+        "mock": [
+            {
+                "packageName": "amplify-util-mock",
+                "packageVersion": "3.13.1",
+                "packageLocation": "/home/ec2-user/.nvm/versions/node/v10.18.1/lib/node_modules/@aws-amplify/cli/node_modules/amplify-util-mock",
+                "manifest": {
+                    "name": "mock",
+                    "type": "util",
+                    "commands": [
+                        "api",
+                        "function",
+                        "mock",
+                        "storage",
+                        "help"
+                    ],
+                    "eventHandlers": []
+                }
+            }
+        ]
+    },
+    "excluded": {}
+}

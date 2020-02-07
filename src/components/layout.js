@@ -1,51 +1,72 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Helmet from 'react-helmet'
-import { StaticQuery, graphql } from 'gatsby'
+import React from "react"
+import { Link } from "gatsby"
 
-import Header from './header'
-import './layout.css'
+import { rhythm, scale } from "../utils/typography"
 
-const Layout = ({ children, data }) => (
-  <StaticQuery
-    query={graphql`
-      query SiteTitleQuery {
-        site {
-          siteMetadata {
-            title
-          }
-        }
-      }
-    `}
-    render={data => (
-      <>
-        <Helmet
-          title={data.site.siteMetadata.title}
-          meta={[
-            { name: 'description', content: 'Sample' },
-            { name: 'keywords', content: 'sample, something' },
-          ]}
-        >
-          <html lang="en" />
-        </Helmet>
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <div
+const Layout = ({ location, title, children }) => {
+  const rootPath = `${__PATH_PREFIX__}/`
+  let header
+
+  if (location.pathname === rootPath) {
+    header = (
+      <h1
+        style={{
+          ...scale(1.5),
+          marginBottom: rhythm(1.5),
+          marginTop: 0,
+        }}
+      >
+        <Link
           style={{
-            margin: '0 auto',
-            maxWidth: 960,
-            padding: '0px 1.0875rem 1.45rem',
-            paddingTop: 0,
+            boxShadow: `none`,
+            textDecoration: `none`,
+            color: `inherit`,
           }}
+          to={`/`}
         >
-          {children}
-        </div>
-      </>
-    )}
-  />
-)
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
+          {title}
+        </Link>
+      </h1>
+    )
+  } else {
+    header = (
+      <h3
+        style={{
+          fontFamily: `Montserrat, sans-serif`,
+          marginTop: 0,
+        }}
+      >
+        <Link
+          style={{
+            boxShadow: `none`,
+            textDecoration: `none`,
+            color: `inherit`,
+          }}
+          to={`/`}
+        >
+          {title}
+        </Link>
+      </h3>
+    )
+  }
+  return (
+    <div
+      style={{
+        marginLeft: `auto`,
+        marginRight: `auto`,
+        maxWidth: rhythm(24),
+        padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
+      }}
+    >
+      <header>{header}</header>
+      <main>{children}</main>
+      <footer>
+        © {new Date().getFullYear()}, Built with
+        {` `}
+        <a href="https://www.gatsbyjs.org">Gatsby</a>
+      </footer>
+    </div>
+  )
 }
 
 export default Layout

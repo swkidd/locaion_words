@@ -19,7 +19,8 @@
 + figure out theming best practices for react / gatsby
 
 #code
-+ routing best practices (currently using reach router)
++ ~~routing best practices (currently using reach router)~~
+    + gatsby uses reach router and also Link component from 'gatsby'
 + update onComponentDidMount usage
 + switch stateless componentes to functions
 

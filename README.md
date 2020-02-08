@@ -24,3 +24,7 @@
 + update onComponentDidMount usage
 + switch stateless componentes to functions
 
+#maps
++ how to get street view
++ why are styles being ignored even though they are being set on map load (page map.js)
+

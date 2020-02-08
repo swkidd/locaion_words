@@ -25,7 +25,8 @@
 + switch stateless componentes to functions
 
 #maps
-+ how to get street view
++ ~~how to get street view~~
+    + set streetViewControl to true in option to map component
 + ~~why are styles being ignored even though they are being set on map load (page map.js)~~
     + have to pass options prop to googlemps component instead of using onmapload https://github.com/google-map-react/google-map-react/blob/master/API.md
 

@@ -3,13 +3,11 @@ import GoogleMapReact from 'google-map-react';
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const handleApiLoaded = (map, maps) => {
-    map.styles = styles;
-    console.log(map);
-};
-
 const mapOptions = (map) => {
-    return { styles: styles }
+    return { 
+        styles: styles,
+        streetViewControl: true,
+    }
 };
 
 class SimpleMap extends Component {

@@ -26,5 +26,6 @@
 
 #maps
 + how to get street view
-+ why are styles being ignored even though they are being set on map load (page map.js)
++ ~~why are styles being ignored even though they are being set on map load (page map.js)~~
+    + have to pass options prop to googlemps component instead of using onmapload https://github.com/google-map-react/google-map-react/blob/master/API.md
 

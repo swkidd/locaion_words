@@ -8,6 +8,10 @@ const handleApiLoaded = (map, maps) => {
     console.log(map);
 };
 
+const mapOptions = (map) => {
+    return { styles: styles }
+};
+
 class SimpleMap extends Component {
     static defaultProps = {
         center: {
@@ -22,11 +26,10 @@ class SimpleMap extends Component {
         return (
             <div style={{ height: '100vh', width: '100%' }}>
         <GoogleMapReact
+          options={mapOptions}
           bootstrapURLKeys={{ key: "AIzaSyD9jTGYNpWqhcKSA3dI_atkepXqAIvfnck" }}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
-          yesIWantToUseGoogleMapApiInternals={true}
-          onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         >
           <AnyReactComponent
             lat={59.955413}

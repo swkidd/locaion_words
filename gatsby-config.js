@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `MEMNUT`,
     author: `Steve Kidd`,
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    description: `A blog about memory techniques.`,
     siteUrl: `https://memnut.com`,
     social: {
       twitter: `thisisntarealtwitteraccount12392130918238`,
@@ -10,13 +10,6 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `images`,
-        path: `${__dirname}/src/images`,
-      },
-    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -63,7 +56,7 @@ module.exports = {
         background_color: `#663399`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        icon: `content/assets/gatsby-icon.png`,
       },
     },
     {

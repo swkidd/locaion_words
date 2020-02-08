@@ -56,7 +56,6 @@ const Bio = () => {
       <p>
         Written by <strong>{author}</strong> who lives and works in 
         Japan building useful things.
-        {` `}
       </p>
     </div>
   )

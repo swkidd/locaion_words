@@ -1,4 +1,5 @@
 # Project dependencies
+.env.*
 .env
 .cache
 node_modules

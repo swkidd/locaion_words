@@ -29,4 +29,5 @@
     + set streetViewControl to true in option to map component
 + ~~why are styles being ignored even though they are being set on map load (page map.js)~~
     + have to pass options prop to googlemps component instead of using onmapload https://github.com/google-map-react/google-map-react/blob/master/API.md
-
++ map markers do not display in street view, figure out how to display markers correctly in street view
++ map labels can be set in the styles passed to the map options prop (poi.park etc)

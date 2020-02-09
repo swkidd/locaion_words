@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const markerStyles = {
+    height: "100px",
+    width: "100px",
+    backgroundColor: "chartreuse",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "7em",
+    textAlign: "center",
+}
+const AnyReactComponent = ({ text }) => <div style={markerStyles}>{text}</div>;
 
 const mapOptions = (map) => {
     return { 
@@ -13,8 +22,8 @@ const mapOptions = (map) => {
 class SimpleMap extends Component {
     static defaultProps = {
         center: {
-            lat: 59.95,
-            lng: 30.33
+            lat: 35.679853,
+            lng: 139.769099,
         },
         zoom: 11
     };
@@ -30,9 +39,9 @@ class SimpleMap extends Component {
           defaultZoom={this.props.zoom}
         >
           <AnyReactComponent
-            lat={59.955413}
-            lng={30.337844}
-            text="My Marker"
+            lat={35.670035}
+            lng={139.760057}
+            text="有"
           />
         </GoogleMapReact>
       </div>
@@ -51,6 +60,31 @@ const styles = [
         featureType: 'administrative.locality',
         elementType: 'labels.text.fill',
         stylers: [{ color: '#d59563' }]
+    },
+    {
+        featureType: 'road',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }]
+    },
+    {
+        featureType: 'administrative',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }]
+    },
+    {
+        featureType: 'transit',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }]
+    },
+    {
+        featureType: 'poi',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }]
+    },
+    {
+        featureType: 'poi.park',
+        elementType: 'labels',
+        stylers: [{ visibility: 'on' }]
     },
     {
         featureType: 'poi',

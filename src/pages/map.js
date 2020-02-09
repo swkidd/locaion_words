@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 
 const markerStyles = {
@@ -13,40 +13,46 @@ const markerStyles = {
 const AnyReactComponent = ({ text }) => <div style={markerStyles}>{text}</div>;
 
 const mapOptions = (map) => {
-    return { 
+    return {
         styles: styles,
         streetViewControl: true,
     }
 };
 
-class SimpleMap extends Component {
-    static defaultProps = {
-        center: {
-            lat: 35.679853,
-            lng: 139.769099,
-        },
-        zoom: 11
-    };
+const SimpleMap = ({ center = { lat: 35.679835, lng: 139.769099 }, zoom = 11, ...props }) => {
+
+    const [map, setMap] = useState({});
+    const [pano, setPano] = useState({});
+
+    const handleApiLoaded = (map, maps) => {
+        setMap(map);
+        var bankMarker = new maps.Marker({
+            position: { lat: center.lat, lng: center.lng },
+            map: map,
+            icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=dollar|FFFF00',
+            title: 'Bank'
+        });
+        // pano.visible is true when in streetview
+        setPano(map.getStreetView());
+    }
+
+    const onClick = () => console.log(map);
 
 
-    render() {
-        return (
-            <div style={{ height: '100vh', width: '100%' }}>
+    return (
+        <div style={{ height: '100vh', width: '100%' }}>
         <GoogleMapReact
           options={mapOptions}
+          onClick={onClick}
           bootstrapURLKeys={{ key: "AIzaSyD9jTGYNpWqhcKSA3dI_atkepXqAIvfnck" }}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
+          defaultCenter={center}
+          defaultZoom={zoom}
+          yesIWantToUseGoogleMapApiInternals={true}
+          onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         >
-          <AnyReactComponent
-            lat={35.670035}
-            lng={139.760057}
-            text="有"
-          />
         </GoogleMapReact>
       </div>
-        );
-    }
+    );
 }
 
 export default SimpleMap;
@@ -62,24 +68,14 @@ const styles = [
         stylers: [{ color: '#d59563' }]
     },
     {
-        featureType: 'road',
+        featureType: 'all',
         elementType: 'labels',
         stylers: [{ visibility: 'off' }]
     },
     {
         featureType: 'administrative',
         elementType: 'labels',
-        stylers: [{ visibility: 'off' }]
-    },
-    {
-        featureType: 'transit',
-        elementType: 'labels',
-        stylers: [{ visibility: 'off' }]
-    },
-    {
-        featureType: 'poi',
-        elementType: 'labels',
-        stylers: [{ visibility: 'off' }]
+        stylers: [{ visibility: 'on' }]
     },
     {
         featureType: 'poi.park',

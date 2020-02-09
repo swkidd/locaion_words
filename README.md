@@ -30,4 +30,12 @@
 + ~~why are styles being ignored even though they are being set on map load (page map.js)~~
     + have to pass options prop to googlemps component instead of using onmapload https://github.com/google-map-react/google-map-react/blob/master/API.md
 + map markers do not display in street view, figure out how to display markers correctly in street view
+    + https://developers.google.com/maps/documentation/javascript/reference/overlay-view
 + map labels can be set in the styles passed to the map options prop (poi.park etc)
+
+
+#The main idea so far
+
+Blog posts link to a place which gives information about which elements are stored at the loci
+The blog post can be read independently. Information in the blog posts is stored in street view as map markers on loci.
+blog posts are free, access to street view is for paid subscriptions only.

@@ -3,7 +3,12 @@ import React, { Component, useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 
 const markerStyles = {
-    color: "white",
+    position: "relative",
+    left: "-50px",
+    height: "auto",
+    width: "100px",
+    backgroundColor: "white",
+    color: "black",
     fontWeight: "bold",
     textAlign: "center",
 }
@@ -21,7 +26,8 @@ const Map = ({
     markers = [],
     center,
     zoom,
-    onClick
+    onClick,
+    ...rest
 }) => {
     return (
         <div style={{ height: '100%', width: '100%' }}>
@@ -31,6 +37,7 @@ const Map = ({
                 bootstrapURLKeys={{ key: "AIzaSyD9jTGYNpWqhcKSA3dI_atkepXqAIvfnck" }}
                 defaultCenter={center}
                 defaultZoom={zoom}
+                {...rest}
             >
                 {markers}
             </GoogleMapReact>

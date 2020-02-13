@@ -1,7 +1,7 @@
-import React, { Component, useState } from "react";
-import { graphql, Link } from "gatsby";
+import React, { Component, useState } from 'react';
+import { graphql } from "gatsby";
 
-import Layout from "../components/layout"
+import Layout from "../components/layout";
 
 import GoogleMapReact from 'google-map-react';
 
@@ -17,36 +17,55 @@ const onClick = args => console.log(args);
 
 const mapOptions = (map) => {
     return {
-        styles: styles,
+        styles: mapStyles,
         streetViewControl: true,
     }
 };
 
 const Map = ({ data, location, center = { lat: 35.679835, lng: 139.769099 }, zoom = 11, ...props }) => {
-    const siteTitle = data.site.siteMetadata.title;
-    
+    const siteTitle = data.site.siteMetadata.title
+
     return (
         <Layout location={location} title={siteTitle}>
-            <div style={{ height: '100vh', width: '100%' }}>
-                <GoogleMapReact
-                  options={mapOptions}
-                  onClick={onClick}
-                  bootstrapURLKeys={{ key: "AIzaSyD9jTGYNpWqhcKSA3dI_atkepXqAIvfnck" }}
-                  defaultCenter={center}
-                  defaultZoom={zoom}
-                >
-                    <Marker text="頑張る"　lat={center.lat} lng={center.lng} />
-                
-                </GoogleMapReact>
-          </div>
-      </Layout>
+            <div style={styles.container}>
+                <div style={{ height: '100%', width: '100%' }}>
+                    <GoogleMapReact
+                        options={mapOptions}
+                        onClick={onClick}
+                        bootstrapURLKeys={{ key: "AIzaSyD9jTGYNpWqhcKSA3dI_atkepXqAIvfnck" }}
+                        defaultCenter={center}
+                        defaultZoom={zoom}
+                    >
+                        <Marker text="頑張る"　lat={center.lat} lng={center.lng} />
+                    </GoogleMapReact>
+                </div>
+                <div style={styles.editor}>editor</div>
+            </div>
+        </Layout>
     );
 }
 
 export default Map;
 
+const styles = {
+    container: {
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    editor: {
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    }
+}
 
-const styles = [
+const mapStyles = [
     { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
     { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
     { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },

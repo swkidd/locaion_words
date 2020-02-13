@@ -31,6 +31,7 @@
     + have to pass options prop to googlemps component instead of using onmapload https://github.com/google-map-react/google-map-react/blob/master/API.md
 + map markers do not display in street view, figure out how to display markers correctly in street view
     + https://developers.google.com/maps/documentation/javascript/reference/overlay-view
+    + https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/javascript/customoverlays
 + map labels can be set in the styles passed to the map options prop (poi.park etc)
 
 

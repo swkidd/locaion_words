@@ -13,7 +13,7 @@ const markerStyles = {
     textAlign: "center",
 }
 
-export const Marker = ({ text }) => <div style={markerStyles}>{text}</div>;
+export const Marker = ({ style, text }) => <div style={{...markerStyles, ...style}}>{text}</div>;
 
 const mapOptions = (map) => {
     return {

@@ -67,8 +67,7 @@ const Layout = ({ location, title, children }) => {
     >
       <header>{header}</header>
       <main style={{height: "100%"}}>{children}</main>
-      <footer>
-      </footer>
+      <footer></footer>
     </div>
   )
 }

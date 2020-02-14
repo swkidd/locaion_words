@@ -8,25 +8,50 @@ import Map, { Marker } from "../components/Map";
 
 const gridListStyles = {
     container: {
-        margin: 0,
         height: "2em",
         width: "100%",
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
         scrollSnapAlign: "start",
         listStyle: "none",
     },
+    input: {
+        border: "0",
+        padding: "2px",
+        margin: "0 5px 0 0",
+        width: "100%",
+        outline: "0",
+        background: "#242f3e",
+        border: "3px solid #746855",
+        color: "#d59563",
+        borderRadius: "1px",
+    },
+    btnContainer: {
+        width: "4em",
+    },
     btn: {
-        border: "none",
-        backgroundColor: "inherit",
-        outline: "none",
+        border: "0",
+        outline: "0",
+        padding: "2px",
+        margin: "0 5px 0 0",
+        color: "#d59563",
+        background: "#242f3e",
+        border: "3px solid #746855",
+        borderRadius: "1px",
+        fontWeight: "bold",
+        cursor: "pointer",
     }
 }
 
-const MarkerRec = ({onUpdateText, onDel, onFocus, lat, lng}) => {
+const MarkerRec = ({ text, onUpdateText, onDel, onFocus, lat, lng}) => {
     return (
         <li style={gridListStyles.container}>
-            <input type="text" onChange={onUpdateText} />
-            <button style={gridListStyles.btn} onClick={onDel}>d</button>
-            <button style={gridListStyles.btn} onClick={onFocus}>f</button>
+            <input type="text" style={gridListStyles.input} value={text} onChange={onUpdateText} />
+            <div style={gridListStyles.btnContainer}>
+                <button style={gridListStyles.btn} onClick={onDel}>D</button>
+                <button style={gridListStyles.btn} onClick={onFocus}>F</button>
+            </div>
         </li>
     )
 }
@@ -38,9 +63,9 @@ const MapEditorPage = ({ data, location }) => {
     const defaultZoom = 11
 
     const markerStyles = zoom => {
-        //markers are in view for two zooms in and out 
+        //markers are in view for two zooms in and one out 
         const zoomDif = state.zoom - zoom;
-        const scale = (zoomDif < -2 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
+        const scale = (zoomDif < -1 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
         let markerStyle = {} 
         if (zoom < 15 ) {
             markerStyle = {
@@ -117,6 +142,7 @@ const MapEditorPage = ({ data, location }) => {
                 <ul style={styles.editor}>
                     {state.markers.map(e => (
                         <MarkerRec 
+                            text={e.text}
                             onUpdateText={onUpdateText(e.id)}
                             onDel={onDel(e.id)}
                             onFocus={onFocus(e.id)}
@@ -140,15 +166,17 @@ const styles = {
         maxHeight: "calc(var(--vh, 1vh) * 70)",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: "space-around",
         alignItems: "center",
     },
     editor: {
         margin: 0,
+        padding: "5px",
         width: "100%",
         height: "100%",
         overflowY: "scroll",
         scrollSnapType: "y mandatory",
+        background: "#17263c",
     }
 }
 

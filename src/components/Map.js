@@ -18,6 +18,7 @@ export const Marker = ({ style, text }) => <div style={{...markerStyles, ...styl
 
 const mapOptions = (map) => {
     return {
+        mapTypeId: "satellite",
         styles: mapStyles,
         streetViewControl: true,
     }

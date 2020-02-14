@@ -1,0 +1,7 @@
+type MarkerType @model {
+  id: ID!
+  lat: Float!
+  lng: Float!
+  zoom: Int!
+  text: String
+}

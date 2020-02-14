@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { graphql } from "gatsby";
 import { uuid } from "../utils/uuid";
 
+import { DataStore, Predicates } from "@aws-amplify/datastore";
+import { MarkerType } from "../models";
+
 import Layout from "../components/layout";
 import Map, { Marker } from "../components/Map";
-
 
 const gridListStyles = {
     container: {
@@ -56,11 +58,43 @@ const MarkerRec = ({ text, onUpdateText, onDel, onFocus, lat, lng}) => {
     )
 }
 
-
 const MapEditorPage = ({ data, location }) => {
     const siteTitle = data.site.siteMetadata.title
     const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
+    
+    const saveState = async () => {
+        for (let i = 0; i < state.markers.length; ++i) {
+            const s = state.markers[i]; 
+            const m = await DataStore.query(MarkerType, s.id);
+            if (m) {
+                await DataStore.save(
+                    MarkerType.copyOf(m, updated => {
+                        updated.text = s.text
+                    })
+                )
+            } else {
+                await DataStore.save(new MarkerType({
+                    id: s.id,
+                    lat: s.lat,
+                    lng: s.lng,
+                    zoom: s.zoom,
+                    text: s.text,
+                }))
+            }
+        }
+    }
+    
+    const pullState = async () => {
+        const markers = await DataStore.query(MarkerType, Predicates.ALL);
+        setState({...state, markers: markers.map(m => ({
+            id: m.id,
+            text: m.text,
+            lng: m.lng,
+            lat: m.lat,
+            zoom: m.zoom
+        }))});
+    }
 
     const markerStyles = zoom => {
         //markers are in view for two zooms in and one out 
@@ -87,8 +121,10 @@ const MapEditorPage = ({ data, location }) => {
         markers: [],
     });
     
-    const onDel = id => () => {
+    const onDel = id => async () => {
         setState({...state, markers: state.markers.filter(s => s.id !== id)})
+        const todelete = await DataStore.query(MarkerType, id);
+        todelete && DataStore.delete(todelete);
     }
     
     const onFocus = id => () => {
@@ -97,7 +133,7 @@ const MapEditorPage = ({ data, location }) => {
     }
     
     const onUpdateText = id => evt => {
-        setState({...state, marker: state.markers.map(s => {
+        setState({...state, markers: state.markers.map(s => {
             if (s.id === id) {
                s.text = evt.target.value; 
             }
@@ -116,7 +152,7 @@ const MapEditorPage = ({ data, location }) => {
     }
     
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
-        setState({...state, zoom: zoom});
+        setState({...state, zoom: zoom, center: center});
     }
     
     return (
@@ -141,6 +177,7 @@ const MapEditorPage = ({ data, location }) => {
                         zoom={state.zoom}
                         markers={state.markers.map(e => (
                             <Marker 
+                                key={e.id}
                                 style={markerStyles(e.zoom)}
                                 text={e.text}
                                 lat={e.lat}
@@ -153,6 +190,7 @@ const MapEditorPage = ({ data, location }) => {
                     <ul style={styles.editor}>
                         {state.markers.map(e => (
                             <MarkerRec 
+                                key={e.id}
                                 text={e.text}
                                 onUpdateText={onUpdateText(e.id)}
                                 onDel={onDel(e.id)}
@@ -162,7 +200,8 @@ const MapEditorPage = ({ data, location }) => {
                             />
                         ))}
                     </ul>
-                    <button onClick={() => setState({...state, modal: !state.modal})}>export markers</button>
+                    <button onClick={() => saveState()}>save markers</button>
+                    <button onClick={() => pullState()}>pull markers</button>
                 </div>
             </div>
         </Layout>
@@ -187,7 +226,7 @@ const styles = {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        margin: 0,
+        margin: "0",
     },
     editor: {
         maxHeight: "100%",
@@ -195,6 +234,7 @@ const styles = {
         overflowY: "scroll",
         scrollSnapType: "y mandatory",
         background: "#17263c",
+        margin: "0",
     },
     modal: {
         position: "fixed",

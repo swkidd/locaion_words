@@ -123,8 +123,11 @@ const MapEditorPage = ({ data, location }) => {
         <Layout location={location} title={siteTitle}>
             {state.modal && 
                 <div style={styles.modal}>
-                    <div style={styles.modalContnet}>{JSON.stringify(state.markers)}</div>
-                    <button onClick={() => setState({...state, modal: !state.modal})}>close</button>
+                    <div style={styles.modalContent}>{JSON.stringify(state.markers)}</div>
+                    <button 
+                        style={styles.closeBtn} 
+                        onClick={() => setState({...state, modal: !state.modal})}
+                    >close</button>
                 </div>
             }
             <div style={styles.container}>
@@ -187,7 +190,8 @@ const styles = {
         margin: 0,
     },
     editor: {
-        padding: "5px",
+        maxHeight: "100%",
+        height: "100%",
         overflowY: "scroll",
         scrollSnapType: "y mandatory",
         background: "#17263c",
@@ -196,7 +200,7 @@ const styles = {
         position: "fixed",
         zIndex: "1",
         width: "50%",
-        height: "500px",
+        height: "50%",
         backgroundColor: "white",
         color: "black",
         top: "50%",
@@ -205,12 +209,18 @@ const styles = {
         border: "1px solid black",
         borderRadius: "5px",
         padding: "10px",
-        display: "flex",
+        dispaly: "flex",
         flexDirection: "column",
     },
     modalContent: {
+        maxHeight: "90%",
+        height: "90%",
         width: "100%",
-        overflowY: "scroll",
+        overflowY: "auto",
+    },
+    closeBtn: {
+        width: "100%",
+        marginTop: "5px",
     }
 }
 

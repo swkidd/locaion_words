@@ -11,6 +11,7 @@ const markerStyles = {
     color: "black",
     fontWeight: "bold",
     textAlign: "center",
+    fontSize: "1.5em",
 }
 
 export const Marker = ({ style, text }) => <div style={{...markerStyles, ...style}}>{text}</div>;
@@ -24,8 +25,8 @@ const mapOptions = (map) => {
 
 const Map = ({
     markers = [],
-    center,
-    zoom,
+    defaultZoom,
+    defaultCenter,
     onClick,
     ...rest
 }) => {
@@ -35,8 +36,8 @@ const Map = ({
                 options={mapOptions}
                 onClick={onClick}
                 bootstrapURLKeys={{ key: "AIzaSyD9jTGYNpWqhcKSA3dI_atkepXqAIvfnck" }}
-                defaultCenter={center}
-                defaultZoom={zoom}
+                defaultCenter={defaultCenter}
+                defaultZoom={defaultZoom}
                 {...rest}
             >
                 {markers}
@@ -51,40 +52,27 @@ const mapStyles = [
     { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
     { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
     { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+    /*
     {
         featureType: 'administrative.locality',
         elementType: 'labels.text.fill',
         stylers: [{ color: '#d59563' }]
     },
     {
+        featureType: 'administrative',
+        elementType: 'labels',
+        stylers: [{ visibility: 'on' }]
+    },
+    */
+    {
         featureType: 'all',
         elementType: 'labels',
         stylers: [{ visibility: 'off' }]
     },
     {
-        featureType: 'administrative',
-        elementType: 'labels',
-        stylers: [{ visibility: 'on' }]
-    },
-    {
-        featureType: 'poi.park',
-        elementType: 'labels',
-        stylers: [{ visibility: 'on' }]
-    },
-    {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#d59563' }]
-    },
-    {
         featureType: 'poi.park',
         elementType: 'geometry',
         stylers: [{ color: '#263c3f' }]
-    },
-    {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#6b9a76' }]
     },
     {
         featureType: 'road',
@@ -97,11 +85,6 @@ const mapStyles = [
         stylers: [{ color: '#212a37' }]
     },
     {
-        featureType: 'road',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#9ca5b3' }]
-    },
-    {
         featureType: 'road.highway',
         elementType: 'geometry',
         stylers: [{ color: '#746855' }]
@@ -112,19 +95,14 @@ const mapStyles = [
         stylers: [{ color: '#1f2835' }]
     },
     {
-        featureType: 'road.highway',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#f3d19c' }]
-    },
-    {
         featureType: 'transit',
         elementType: 'geometry',
         stylers: [{ color: '#2f3948' }]
     },
     {
-        featureType: 'transit.station',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#d59563' }]
+        featureType: 'water',
+        elementType: 'labels',
+        stylers: [{ visibility: 'on' }]
     },
     {
         featureType: 'water',

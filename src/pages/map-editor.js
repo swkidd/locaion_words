@@ -14,16 +14,19 @@ const gridListStyles = {
         scrollSnapAlign: "start",
         listStyle: "none",
     },
-    deleteBtn: {
+    btn: {
         border: "none",
+        backgroundColor: "inherit",
+        outline: "none",
     }
 }
 
-const MarkerRec = ({onUpdateText, onDel, lat, lng}) => {
+const MarkerRec = ({onUpdateText, onDel, onFocus, lat, lng}) => {
     return (
         <li style={gridListStyles.container}>
             <input type="text" onChange={onUpdateText} />
-            <button style={gridListStyles.deleteBtn} onClick={onDel}>delete</button>
+            <button style={gridListStyles.btn} onClick={onDel}>d</button>
+            <button style={gridListStyles.btn} onClick={onFocus}>f</button>
         </li>
     )
 }
@@ -31,24 +34,40 @@ const MarkerRec = ({onUpdateText, onDel, lat, lng}) => {
 
 const MapEditorPage = ({ data, location }) => {
     const siteTitle = data.site.siteMetadata.title
-    const center = { lat: 35.679835, lng: 139.769099 }
+    const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
 
     const markerStyles = zoom => {
+        //markers are in view for two zooms in and out 
         const zoomDif = state.zoom - zoom;
-        const scale = Math.abs(zoomDif) < 5 ? 1 + zoomDif / 5 : 0;
+        const scale = (zoomDif < -2 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
+        let markerStyle = {} 
+        if (zoom < 15 ) {
+            markerStyle = {
+                color: '#d59563',
+                backgroundColor: "inherit",
+            } 
+        }
+        
         return {
+            ...markerStyle, 
             transform: `scale(${scale})`,
         }
     }
     
     const [state, setState] = useState({
+        center: defaultCenter,
         zoom: defaultZoom,
         markers: [],
     });
     
-    const removeMarker = id => () => {
+    const onDel = id => () => {
         setState({...state, markers: state.markers.filter(s => s.id !== id)})
+    }
+    
+    const onFocus = id => () => {
+        let elm = state.markers.find(m => m.id === id)
+        setState({...state, zoom: elm.zoom, center: { lat: elm.lat, lng: elm.lng }})
     }
     
     const onUpdateText = id => evt => {
@@ -62,7 +81,7 @@ const MapEditorPage = ({ data, location }) => {
     
     const onClick = ({lat, lng, ...props}) => {
         setState({
-            ...state, 
+            ...state,
             markers: [
                 ...state.markers, 
                 { id: uuid(), lat, lng, text: "", zoom: state.zoom }
@@ -81,8 +100,10 @@ const MapEditorPage = ({ data, location }) => {
                     <Map
                         onChange={onChange}
                         onClick={onClick} 
-                        center={center} 
-                        zoom={defaultZoom} 
+                        defaultCenter={defaultCenter} 
+                        defaultZoom={defaultZoom} 
+                        center={state.center}
+                        zoom={state.zoom}
                         markers={state.markers.map(e => (
                             <Marker 
                                 style={markerStyles(e.zoom)}
@@ -97,7 +118,8 @@ const MapEditorPage = ({ data, location }) => {
                     {state.markers.map(e => (
                         <MarkerRec 
                             onUpdateText={onUpdateText(e.id)}
-                            onDel={removeMarker(e.id)}
+                            onDel={onDel(e.id)}
+                            onFocus={onFocus(e.id)}
                             lat={e.lat}
                             lng={e.lng}
                         />

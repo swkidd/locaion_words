@@ -81,6 +81,7 @@ const MapEditorPage = ({ data, location }) => {
     }
     
     const [state, setState] = useState({
+        modal: false,
         center: defaultCenter,
         zoom: defaultZoom,
         markers: [],
@@ -120,6 +121,12 @@ const MapEditorPage = ({ data, location }) => {
     
     return (
         <Layout location={location} title={siteTitle}>
+            {state.modal && 
+                <div style={styles.modal}>
+                    <div style={styles.modalContnet}>{JSON.stringify(state.markers)}</div>
+                    <button onClick={() => setState({...state, modal: !state.modal})}>close</button>
+                </div>
+            }
             <div style={styles.container}>
                 <div style={{ height: '100%', width: '100%' }}>
                     <Map
@@ -139,18 +146,21 @@ const MapEditorPage = ({ data, location }) => {
                         ))}
                     />
                 </div>
-                <ul style={styles.editor}>
-                    {state.markers.map(e => (
-                        <MarkerRec 
-                            text={e.text}
-                            onUpdateText={onUpdateText(e.id)}
-                            onDel={onDel(e.id)}
-                            onFocus={onFocus(e.id)}
-                            lat={e.lat}
-                            lng={e.lng}
-                        />
-                    ))}
-                </ul>
+                <div style={styles.editorContainer}>
+                    <ul style={styles.editor}>
+                        {state.markers.map(e => (
+                            <MarkerRec 
+                                text={e.text}
+                                onUpdateText={onUpdateText(e.id)}
+                                onDel={onDel(e.id)}
+                                onFocus={onFocus(e.id)}
+                                lat={e.lat}
+                                lng={e.lng}
+                            />
+                        ))}
+                    </ul>
+                    <button onClick={() => setState({...state, modal: !state.modal})}>export markers</button>
+                </div>
             </div>
         </Layout>
     );
@@ -169,14 +179,38 @@ const styles = {
         justifyContent: "space-around",
         alignItems: "center",
     },
-    editor: {
-        margin: 0,
-        padding: "5px",
+    editorContainer: {
+        display: "flex",
+        flexDirection: "column",
         width: "100%",
         height: "100%",
+        margin: 0,
+    },
+    editor: {
+        padding: "5px",
         overflowY: "scroll",
         scrollSnapType: "y mandatory",
         background: "#17263c",
+    },
+    modal: {
+        position: "fixed",
+        zIndex: "1",
+        width: "50%",
+        height: "500px",
+        backgroundColor: "white",
+        color: "black",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "1px solid black",
+        borderRadius: "5px",
+        padding: "10px",
+        display: "flex",
+        flexDirection: "column",
+    },
+    modalContent: {
+        width: "100%",
+        overflowY: "scroll",
     }
 }
 

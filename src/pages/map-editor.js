@@ -8,6 +8,18 @@ import { MarkerType } from "../models";
 import Layout from "../components/layout";
 import Map, { Marker } from "../components/Map";
 
+import Amplify from 'aws-amplify'
+import config from '../aws-exports'
+
+const myAppConfig = {
+    'aws_appsync_graphqlEndpoint': 'https://mcs7mj6r35hwnaiwlkoogb3veq.appsync-api.us-east-1.amazonaws.com/graphql',
+    'aws_appsync_region': 'us-east-1',
+    'aws_appsync_authenticationType': 'API_KEY',
+    'aws_appsync_apiKey': 'da2-atyvnmm27ngi3h6vx7j65meilu',
+}
+
+Amplify.configure(config)
+
 const gridListStyles = {
     container: {
         height: "2em",

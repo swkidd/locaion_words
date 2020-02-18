@@ -16,7 +16,9 @@ const markerStyles = {
     fontSize: "1.5em",
 }
 
-export const Marker = ({ style, text }) => <div style={{...markerStyles, ...style}}>{text}</div>;
+export const Marker = ({ style, text }) => (
+        <div style={{...markerStyles, ...style}}>{text}</div>
+);
 
 const mapOptions = (map) => {
     return {

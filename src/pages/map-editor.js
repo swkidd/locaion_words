@@ -72,8 +72,8 @@ const MapEditorPage = ({ data, location }) => {
         }
         
         return {
-            ...markerStyle, 
-            transform: `scale(${scale})`,
+            ...markerStyle,
+            transform: `translate(-50%, -50%) scale(${scale})`,
         }
     }
     

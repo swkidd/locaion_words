@@ -2,8 +2,18 @@ import React, { useState } from 'react';
 import { graphql } from "gatsby";
 import { uuid } from "../utils/uuid";
 
+import { withAuthenticator } from "aws-amplify-react";
+import { DataStore, Predicates } from "@aws-amplify/datastore";
+import { MarkerType } from "../models";
+
 import Layout from "../components/layout";
 import Map, { Marker } from "../components/Map";
+
+import Amplify from '@aws-amplify/core'
+import config from '../aws-exports'
+
+Amplify.configure(config)
+
 
 const gridListStyles = {
     container: {
@@ -59,6 +69,40 @@ const MapEditorPage = ({ data, location }) => {
     const siteTitle = data.site.siteMetadata.title
     const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
+    
+    const saveState = async () => {
+        for (let i = 0; i < state.markers.length; ++i) {
+            const s = state.markers[i]; 
+            const m = await DataStore.query(MarkerType, s.id);
+            if (m) {
+                await DataStore.save(
+                    MarkerType.copyOf(m, updated => {
+                        updated.text = s.text
+                    })
+                )
+            } else {
+                await DataStore.save(new MarkerType({
+                    id: s.id,
+                    lat: s.lat,
+                    lng: s.lng,
+                    zoom: s.zoom,
+                    text: s.text,
+                }))
+            }
+        }
+    }
+    
+    const pullState = async () => {
+        const markers = await DataStore.query(MarkerType, Predicates.ALL);
+        setState({...state, markers: markers.map(m => ({
+            id: m.id,
+            text: m.text,
+            lng: m.lng,
+            lat: m.lat,
+            zoom: m.zoom
+        }))});
+    }
+
     const markerStyles = zoom => {
         //markers are in view for two zooms in and one out 
         const zoomDif = state.zoom - zoom;
@@ -79,7 +123,6 @@ const MapEditorPage = ({ data, location }) => {
     
     const [state, setState] = useState({
         modal: false,
-        goTo: "",
         center: defaultCenter,
         zoom: defaultZoom,
         markers: [],
@@ -87,6 +130,8 @@ const MapEditorPage = ({ data, location }) => {
     
     const onDel = id => async () => {
         setState({...state, markers: state.markers.filter(s => s.id !== id)})
+        const todelete = await DataStore.query(MarkerType, id);
+        todelete && DataStore.delete(todelete);
     }
     
     const onFocus = id => () => {
@@ -117,20 +162,6 @@ const MapEditorPage = ({ data, location }) => {
         setState({...state, zoom: zoom, center: center});
     }
     
-   const onGoTo = e => {
-       e.preventDefault();
-       const latLng = state.goTo.split(",");
-       if (latLng.length < 2) return; 
-       const lat = parseFloat(latLng[0]);
-       const lng = parseFloat(latLng[1]);
-       if (isNaN(lat) || isNaN(lng)) return;
-       setState({...state, zoom: 19, center: {lat: parseFloat(lat), lng: parseFloat(lng)}});
-    }
-   
-   const goToOnChange = e => {
-       setState({...state, goTo: e.target.value});
-    }
-    
     return (
         <Layout location={location} title={siteTitle}>
             {state.modal && 
@@ -150,8 +181,8 @@ const MapEditorPage = ({ data, location }) => {
                         defaultCenter={defaultCenter} 
                         defaultZoom={defaultZoom} 
                         center={state.center}
-                        zoom={state.zoom}>
-                        {state.markers.map(e => (
+                        zoom={state.zoom}
+                        markers={state.markers.map(e => (
                             <Marker 
                                 key={e.id}
                                 style={markerStyles(e.zoom)}
@@ -160,7 +191,7 @@ const MapEditorPage = ({ data, location }) => {
                                 lng={e.lng} 
                             />
                         ))}
-                    </Map>
+                    />
                 </div>
                 <div style={styles.editorContainer}>
                     <ul style={styles.editor}>
@@ -176,21 +207,15 @@ const MapEditorPage = ({ data, location }) => {
                             />
                         ))}
                     </ul>
-                    <button onClick={() => setState({...state, modal: !state.modal })}>export markers</button>
-                    <form onSubmit={onGoTo}>
-                        <label>
-                            Lat, Lng:
-                            <input type="text" value={state.goTo.lat} onChange={goToOnChange} />
-                        </label>
-                        <input type="submit" value="Go To" />
-                    </form>
+                    <button onClick={() => saveState()}>save markers</button>
+                    <button onClick={() => pullState()}>pull markers</button>
                 </div>
             </div>
         </Layout>
     );
 }
 
-export default MapEditorPage;
+export default withAuthenticator(MapEditorPage);
 
 const styles = {
     container: {

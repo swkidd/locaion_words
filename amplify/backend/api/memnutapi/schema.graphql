@@ -1,4 +1,4 @@
-type MarkerType @model {
+type MarkerType @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   lat: Float!
   lng: Float!

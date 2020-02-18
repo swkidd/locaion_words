@@ -54,7 +54,7 @@ const Bio = () => {
         }}
       />
       <p>
-        Written by <strong>{author}</strong> who lives and works in 
+        Memnut is maintained by <strong>{author}</strong> who lives and works in 
         Japan building useful things.
       </p>
     </div>

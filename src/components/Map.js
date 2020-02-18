@@ -3,10 +3,12 @@ import React, { Component, useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 
 const markerStyles = {
-    position: "relative",
-    left: "-50px",
     height: "auto",
-    width: "100px",
+    maxHeight: "300px",
+    maxWidth: "300px",
+    minWidth: "100px",
+    width: "max-content",
+    overflow: "auto",
     backgroundColor: "white",
     color: "black",
     fontWeight: "bold",
@@ -18,17 +20,16 @@ export const Marker = ({ style, text }) => <div style={{...markerStyles, ...styl
 
 const mapOptions = (map) => {
     return {
-        mapTypeId: "satellite",
-        styles: mapStyles,
+        mapTypeId: "hybrid",
         streetViewControl: true,
     }
 };
 
 const Map = ({
-    markers = [],
     defaultZoom,
     defaultCenter,
     onClick,
+    children,
     ...rest
 }) => {
     return (
@@ -41,83 +42,10 @@ const Map = ({
                 defaultZoom={defaultZoom}
                 {...rest}
             >
-                {markers}
+                {children}
             </GoogleMapReact>
         </div>
     );
 }
 
 export default Map;
-
-const mapStyles = [
-    { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
-    { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-    { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-    /*
-    {
-        featureType: 'administrative.locality',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#d59563' }]
-    },
-    {
-        featureType: 'administrative',
-        elementType: 'labels',
-        stylers: [{ visibility: 'on' }]
-    },
-    */
-    {
-        featureType: 'all',
-        elementType: 'labels',
-        stylers: [{ visibility: 'off' }]
-    },
-    {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{ color: '#263c3f' }]
-    },
-    {
-        featureType: 'road',
-        elementType: 'geometry',
-        stylers: [{ color: '#38414e' }]
-    },
-    {
-        featureType: 'road',
-        elementType: 'geometry.stroke',
-        stylers: [{ color: '#212a37' }]
-    },
-    {
-        featureType: 'road.highway',
-        elementType: 'geometry',
-        stylers: [{ color: '#746855' }]
-    },
-    {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [{ color: '#1f2835' }]
-    },
-    {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{ color: '#2f3948' }]
-    },
-    {
-        featureType: 'water',
-        elementType: 'labels',
-        stylers: [{ visibility: 'on' }]
-    },
-    {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{ color: '#17263c' }]
-    },
-    {
-        featureType: 'water',
-        elementType: 'labels.text.fill',
-        stylers: [{ color: '#515c6d' }]
-    },
-    {
-        featureType: 'water',
-        elementType: 'labels.text.stroke',
-        stylers: [{ color: '#17263c' }]
-    }
-]

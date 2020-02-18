@@ -21,9 +21,9 @@ const MapPage = ({ data, location}) => {
                 <Map 
                     onClick={onClick} 
                     center={center} 
-                    zoom={zoom} 
-                    markers={markers}
-                />
+                    zoom={zoom}>
+                    {markers}
+                </Map>
             </div>
       </Layout>
     );

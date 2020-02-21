@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"memnut37d13bde": {
+		"memnut16d273e9": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],
@@ -17,17 +17,11 @@
 					"defaultAuthentication": {
 						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
 						"userPoolConfig": {
-							"userPoolId": "authmemnut37d13bde"
+							"userPoolId": "authmemnut16d273e9"
 						}
 					}
 				}
 			}
-		}
-	},
-	"hosting": {
-		"S3AndCloudFront": {
-			"service": "S3AndCloudFront",
-			"providerPlugin": "awscloudformation"
 		}
 	}
 }

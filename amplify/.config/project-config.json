@@ -1,7 +1,4 @@
 {
-    "providers": [
-        "awscloudformation"
-    ],
     "projectName": "memnut",
     "version": "3.0",
     "frontend": "javascript",
@@ -10,8 +7,11 @@
         "config": {
             "SourceDir": "src",
             "DistributionDir": "public",
-            "BuildCommand": "yarn build",
-            "StartCommand": "yarn start"
+            "BuildCommand": "gatsby build",
+            "StartCommand": "yarn develop"
         }
-    }
+    },
+    "providers": [
+        "awscloudformation"
+    ]
 }

@@ -5,6 +5,10 @@ import { rhythm, scale } from "../utils/typography"
 
 import "./layout.css";
 
+import Amplify from "@aws-amplify/core";
+import aws_exports from "../aws-exports";
+
+Amplify.configure(aws_exports);
 const Layout = ({ location, title, children }) => {
   useExactVH();
   

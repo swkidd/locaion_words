@@ -17,7 +17,11 @@ const markerStyles = {
 }
 
 export const Marker = ({ style, text }) => (
-        <div style={{...markerStyles, ...style}}>{text}</div>
+        <div 
+            style={{...markerStyles, ...style}}
+            dangerouslySetInnerHTML={{ __html: text }}
+        >
+        </div>
 );
 
 const mapOptions = (map) => {

@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { graphql } from "gatsby";
 import { uuid } from "../utils/uuid";
 
 import Layout from "../components/layout";
 import Map, { Marker } from "../components/Map";
+
+import Amplify, { Hub } from "@aws-amplify/core";
+import { DataStore, Predicates } from "@aws-amplify/datastore";
+import { MarkerType } from "../models";
+import { withAuthenticator } from "aws-amplify-react";
+import aws_exports from "../aws-exports"; // specify the location of aws-exports.js file on your project
+Amplify.configure(aws_exports);
 
 const gridListStyles = {
     container: {
@@ -43,13 +50,17 @@ const gridListStyles = {
     }
 }
 
-const MarkerRec = ({ text, onUpdateText, onDel, onFocus, lat, lng}) => {
+const MarkerRec = ({ elm, onSubmit, onUpdateText, onDel, onFocus }) => {
     return (
         <li style={gridListStyles.container}>
-            <input type="text" style={gridListStyles.input} value={text} onChange={onUpdateText} />
+            <input type="text" style={gridListStyles.input} value={elm.text} onChange={onUpdateText(elm.id)} />
             <div style={gridListStyles.btnContainer}>
-                <button style={gridListStyles.btn} onClick={onDel}>D</button>
-                <button style={gridListStyles.btn} onClick={onFocus}>F</button>
+                {elm.saved ?
+                <button style={gridListStyles.btn} onClick={onFocus(elm.id)}>F</button>
+                :
+                <button style={gridListStyles.btn} onClick={onSubmit(elm)}>S</button>
+                }
+                <button style={gridListStyles.btn} onClick={onDel(elm)}>D</button>
             </div>
         </li>
     )
@@ -63,20 +74,17 @@ const MapEditorPage = ({ data, location }) => {
         //markers are in view for two zooms in and one out 
         const zoomDif = state.zoom - zoom;
         const scale = (zoomDif < -1 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
-        let markerStyle = {} 
-        if (zoom < 15 ) {
-            markerStyle = {
-                color: '#d59563',
-                backgroundColor: "inherit",
-            } 
+        let markerStyle = {}
+        if (zoom < 15) {
+            markerStyle = {}
         }
-        
+
         return {
             ...markerStyle,
             transform: `translate(-50%, -50%) scale(${scale})`,
         }
     }
-    
+
     const [state, setState] = useState({
         modal: false,
         goTo: "",
@@ -84,55 +92,112 @@ const MapEditorPage = ({ data, location }) => {
         zoom: defaultZoom,
         markers: [],
     });
-    
-    const onDel = id => async () => {
-        setState({...state, markers: state.markers.filter(s => s.id !== id)})
+    const setMarkers = markers => setState({ ...state, markers: markers })
+
+    const onDel = elm => async() => {
+        setState({ ...state, markers: state.markers.filter(s => s.id !== elm.id) })
+        if (elm.saved) {
+            const toDelete = await DataStore.query(MarkerType, elm.id);
+            await DataStore.delete(toDelete);
+        }
     }
-    
+
     const onFocus = id => () => {
         let elm = state.markers.find(m => m.id === id)
-        setState({...state, zoom: elm.zoom, center: { lat: elm.lat, lng: elm.lng }})
+        setState({ ...state, zoom: elm.zoom, center: { lat: elm.lat, lng: elm.lng } })
     }
-    
+
     const onUpdateText = id => evt => {
-        setState({...state, markers: state.markers.map(s => {
-            if (s.id === id) {
-               s.text = evt.target.value; 
-            }
-            return s;
-        })})
+        setState({ ...state,
+            markers: state.markers.map(s => {
+                if (s.id === id) {
+                    s.text = evt.target.value;
+                }
+                return s;
+            })
+        })
     }
-    
-    const onClick = ({lat, lng, ...props}) => {
+
+    const onClick = ({ lat, lng, ...props }) => {
         setState({
             ...state,
             markers: [
-                ...state.markers, 
-                { id: uuid(), lat, lng, text: "", zoom: state.zoom }
+                ...state.markers,
+                { id: uuid(), lat, lng, text: "", zoom: state.zoom, saved: false }
             ]
         })
     }
-    
+
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
-        setState({...state, zoom: zoom, center: center});
+        setState({ ...state, zoom: zoom, center: center });
     }
-    
-   const onGoTo = e => {
-       e.preventDefault();
-       const latLng = state.goTo.split(",");
-       if (latLng.length < 2) return; 
-       const lat = parseFloat(latLng[0]);
-       const lng = parseFloat(latLng[1]);
-       if (isNaN(lat) || isNaN(lng)) return;
-       setState({...state, zoom: 19, center: {lat: parseFloat(lat), lng: parseFloat(lng)}});
+
+    const onGoTo = e => {
+        e.preventDefault();
+        const latLng = state.goTo.split(",");
+        if (latLng.length < 2) return;
+        const lat = parseFloat(latLng[0]);
+        const lng = parseFloat(latLng[1]);
+        if (isNaN(lat) || isNaN(lng)) return;
+        setState({ ...state, zoom: 19, center: { lat: parseFloat(lat), lng: parseFloat(lng) } });
     }
-   
-   const goToOnChange = e => {
-       setState({...state, goTo: e.target.value});
+
+    const goToOnChange = e => {
+        setState({ ...state, goTo: e.target.value });
     }
-    
+
+    const onSubmit = elm => () => {
+        DataStore.save(
+            new MarkerType({
+                id: elm.id,
+                lat: elm.lat,
+                lng: elm.lng,
+                zoom: elm.zoom,
+                text: elm.text,
+            })
+        );
+        listMarkers();
+    };
+
+    async function listMarkers() {
+        const markers = await DataStore.query(MarkerType, Predicates.ALL);
+        setMarkers(markers.map(m => ({...m, saved: true})));
+    }
+
+    useEffect(() => {
+        console.log("use effect");
+        listMarkers();
+
+        const listener = (data) => {
+            if (data.payload.event === "signOut") {
+                DataStore.clear();
+            }
+        }
+        Hub.listen('auth', listener);
+
+        /*const subscription = DataStore.observe(MarkerType).subscribe(msg => {
+            listMarkers();
+            console.log("subscription update");
+        });*/
+
+        const handleConnectionChange = () => {
+            const condition = navigator.onLine ? "online" : "offline";
+            console.log(condition);
+            if (condition === "online") {
+                listMarkers();
+            }
+        };
+
+        window.addEventListener("online", handleConnectionChange);
+        window.addEventListener("offline", handleConnectionChange);
+
+        //return () => subscription.unsubscribe();
+        return () => {};
+    }, []);
+
     return (
         <Layout location={location} title={siteTitle}>
+            <button onClick={() => listMarkers()}>pull markers</button>
             {state.modal && 
                 <div style={styles.modal}>
                     <div style={styles.modalContent}>{JSON.stringify(state.markers)}</div>
@@ -167,12 +232,11 @@ const MapEditorPage = ({ data, location }) => {
                         {state.markers.map(e => (
                             <MarkerRec 
                                 key={e.id}
-                                text={e.text}
-                                onUpdateText={onUpdateText(e.id)}
-                                onDel={onDel(e.id)}
-                                onFocus={onFocus(e.id)}
-                                lat={e.lat}
-                                lng={e.lng}
+                                elm={e}
+                                onUpdateText={onUpdateText}
+                                onDel={onDel}
+                                onFocus={onFocus}
+                                onSubmit={onSubmit}
                             />
                         ))}
                     </ul>
@@ -190,7 +254,7 @@ const MapEditorPage = ({ data, location }) => {
     );
 }
 
-export default MapEditorPage;
+export default withAuthenticator(MapEditorPage, { includeGreetings: true });
 
 const styles = {
     container: {
@@ -246,7 +310,7 @@ const styles = {
     }
 }
 
-export const pageQuery = graphql`
+export const pageQuery = graphql `
   query {
     site {
       siteMetadata {

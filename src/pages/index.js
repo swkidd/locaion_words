@@ -16,7 +16,7 @@ const BlogIndex = ({ data, location }) => {
       <Link style={{ marginRight: "1em", boxShadow: `none` }} to="/map/">
         {"Map"}
       </Link>
-      <Link style={{ boxShadow: `none` }} to="/map-editor/">
+      <Link style={{ marginRight: "1em", boxShadow: `none` }} to="/map-editor/">
         {"Map Editor"}
       </Link>
       {posts.map(({ node }) => {

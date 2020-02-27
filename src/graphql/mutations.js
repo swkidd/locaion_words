@@ -1,47 +1,158 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createMarkerType = /* GraphQL */ `
-  mutation CreateMarkerType(
-    $input: CreateMarkerTypeInput!
-    $condition: ModelMarkerTypeConditionInput
+export const createFlashCardMarker = /* GraphQL */ `
+  mutation CreateFlashCardMarker(
+    $input: CreateFlashCardMarkerInput!
+    $condition: ModelFlashCardMarkerConditionInput
   ) {
-    createMarkerType(input: $input, condition: $condition) {
+    createFlashCardMarker(input: $input, condition: $condition) {
       id
+      groupId
+      owner
       lat
       lng
       zoom
-      text
+      frontText
+      backText
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateFlashCardMarker = /* GraphQL */ `
+  mutation UpdateFlashCardMarker(
+    $input: UpdateFlashCardMarkerInput!
+    $condition: ModelFlashCardMarkerConditionInput
+  ) {
+    updateFlashCardMarker(input: $input, condition: $condition) {
+      id
+      groupId
+      owner
+      lat
+      lng
+      zoom
+      frontText
+      backText
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteFlashCardMarker = /* GraphQL */ `
+  mutation DeleteFlashCardMarker(
+    $input: DeleteFlashCardMarkerInput!
+    $condition: ModelFlashCardMarkerConditionInput
+  ) {
+    deleteFlashCardMarker(input: $input, condition: $condition) {
+      id
+      groupId
+      owner
+      lat
+      lng
+      zoom
+      frontText
+      backText
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createMarkerGroup = /* GraphQL */ `
+  mutation CreateMarkerGroup(
+    $input: CreateMarkerGroupInput!
+    $condition: ModelMarkerGroupConditionInput
+  ) {
+    createMarkerGroup(input: $input, condition: $condition) {
+      id
+      name
+      flashCardMarkers {
+        items {
+          id
+          groupId
+          owner
+          lat
+          lng
+          zoom
+          frontText
+          backText
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
 `;
-export const updateMarkerType = /* GraphQL */ `
-  mutation UpdateMarkerType(
-    $input: UpdateMarkerTypeInput!
-    $condition: ModelMarkerTypeConditionInput
+export const updateMarkerGroup = /* GraphQL */ `
+  mutation UpdateMarkerGroup(
+    $input: UpdateMarkerGroupInput!
+    $condition: ModelMarkerGroupConditionInput
   ) {
-    updateMarkerType(input: $input, condition: $condition) {
+    updateMarkerGroup(input: $input, condition: $condition) {
       id
-      lat
-      lng
-      zoom
-      text
+      name
+      flashCardMarkers {
+        items {
+          id
+          groupId
+          owner
+          lat
+          lng
+          zoom
+          frontText
+          backText
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
 `;
-export const deleteMarkerType = /* GraphQL */ `
-  mutation DeleteMarkerType(
-    $input: DeleteMarkerTypeInput!
-    $condition: ModelMarkerTypeConditionInput
+export const deleteMarkerGroup = /* GraphQL */ `
+  mutation DeleteMarkerGroup(
+    $input: DeleteMarkerGroupInput!
+    $condition: ModelMarkerGroupConditionInput
   ) {
-    deleteMarkerType(input: $input, condition: $condition) {
+    deleteMarkerGroup(input: $input, condition: $condition) {
       id
-      lat
-      lng
-      zoom
-      text
+      name
+      flashCardMarkers {
+        items {
+          id
+          groupId
+          owner
+          lat
+          lng
+          zoom
+          frontText
+          backText
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }

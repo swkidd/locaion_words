@@ -3,6 +3,7 @@ import { Link } from "gatsby"
 import useExactVH from '../utils/useExactVH';
 import { rhythm, scale } from "../utils/typography"
 
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./layout.css";
 
 import Amplify from "@aws-amplify/core";
@@ -64,7 +65,7 @@ const Layout = ({ location, title, children }) => {
         marginRight: `auto`,
         padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
         height: "100vh",
-        height: "calc(var(--vh, 1vh) * 100)",
+        height: "calc(var(--vh, 1vh) * 95)",
         display: "flex",
         flexDirection: "column",
       }}

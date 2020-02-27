@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Link, graphql } from "gatsby"
 
 import Bio from "../components/bio"
@@ -8,17 +8,20 @@ import { rhythm, scale } from "../utils/typography"
 
 import Map, { Marker } from "../components/Map";
 
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 const BlogPostTemplate = ({ data, pageContext, location }) => {
   const post = data.markdownRemark
   const siteTitle = data.site.siteMetadata.title
   const { previous, next } = pageContext
 
-
   // map values
   let defaultCenter = { lat: 35.679835, lng: 139.769099 }
-  const defaultZoom = 15; 
-  
+  const defaultZoom = 15;
+
   const centerArray = post.frontmatter.center ? post.frontmatter.center.split(",") : [];
   if (centerArray.length === 2) {
     const lat = parseFloat(centerArray[0]);
@@ -27,41 +30,66 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
       defaultCenter = { lat: lat, lng: lng };
     }
   }
-  
+
   const [state, setState] = useState({
     center: defaultCenter,
     zoom: defaultZoom,
+    markers: [],
   })
-  
-  const showMap = post.frontmatter.markers ? true : false; 
-  
-  let markers = [];
-  try {
-    markers = showMap && JSON.parse(post.frontmatter.markers);
-  } catch (error) {}
-    
-  const markerStyles = zoom => {
-      //markers are in view for two zooms in and one out 
-      const zoomDif = state.zoom - zoom;
-      const scale = (zoomDif < -1 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
-      let markerStyle = {} 
-      if (zoom < 15 ) {
-          markerStyle = {
-              color: '#d59563',
-              backgroundColor: "inherit",
-          } 
-      }
-      
-      return {
-          ...markerStyle,
-          transform: `translate(-50%, -50%) scale(${scale})`,
-      }
+
+  const showMap = post.frontmatter.markers ? true : false;
+  useEffect(() => {
+    try {
+      const markers = JSON.parse(post.frontmatter.markers)
+      const m0 = markers[0]
+      setState({
+        ...state,
+        markers: markers.map((m, i) => ({ ...m, show: i === 0 })),
+        center: m0 ? { lat: m0.lat, lng: m0.lng } : defaultCenter,
+        zoom: m0 ? m0.zoom : defaultZoom
+      });
+    }
+    catch (error) {}
+
+    return () => {}
+  }, [])
+
+  const moveTo = n => () => {
+    const lat = state.markers[n].lat
+    const lng = state.markers[n].lng
+    const zoom = state.markers[n].zoom
+    setState({ ...state,
+      zoom,
+      center: { lat, lng },
+      markers: state.markers.map((m, i) => ({ ...m, show: i === n }))
+    })
   }
-    
+
+  const markerStyles = e => {
+    //if (!e.show) { return { "visibility": "hidden" } }
+    //markers are in view for two zooms in and one out 
+    const zoomDif = state.zoom - e.zoom;
+    const scale = (zoomDif < -1 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
+    let markerStyle = {}
+    if (e.zoom < 15) {
+      markerStyle = {
+        color: '#d59563',
+        backgroundColor: "inherit",
+      }
+    }
+
+    return {
+      ...markerStyle,
+      position: "relative",
+      zIndex: `${22 - e.zoom}`,
+      transform: `translate(-50%, -50%) scale(${scale})`,
+    }
+  }
+
   const onChange = ({ center, zoom, bounds, marginBounds }) => {
-      setState({...state, zoom: zoom, center: center});
+    setState({ ...state, zoom: zoom, center: center });
   }
-  
+
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
@@ -101,14 +129,24 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
               zoom={state.zoom}
               onChange={onChange}
             >
-              {showMap && markers.map(e => (
-                  <Marker 
+              {showMap && state.markers.map((e, i) => (
+                  <div
                       key={e.id}
-                      style={markerStyles(e.zoom)}
-                      text={e.text}
+                      style={markerStyles(e)}
                       lat={e.lat}
                       lng={e.lng} 
-                  />
+                  >
+                    <OverlayTrigger
+                      placement="top"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={<Tooltip>{e.text}</Tooltip>}
+                    >
+                        <Button
+                          variant="primary"
+                          onClick={moveTo((i + 1) % state.markers.length)}
+                        >next</Button>
+                    </OverlayTrigger>
+                  </div>
               ))}
             </Map>
           </div>
@@ -156,7 +194,7 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
 
 export default BlogPostTemplate
 
-export const pageQuery = graphql`
+export const pageQuery = graphql `
   query BlogPostBySlug($slug: String!) {
     site {
       siteMetadata {

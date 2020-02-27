@@ -17,19 +17,13 @@ const markerStyles = {
 }
 
 export const Marker = ({ style, text }) => (
-        <div 
+    <div 
             style={{...markerStyles, ...style}}
             dangerouslySetInnerHTML={{ __html: text }}
         >
         </div>
 );
 
-const mapOptions = (map) => {
-    return {
-        mapTypeId: "hybrid",
-        streetViewControl: true,
-    }
-};
 
 const Map = ({
     defaultZoom,
@@ -38,6 +32,13 @@ const Map = ({
     children,
     ...rest
 }) => {
+    const mapOptions = (map) => {
+        return {
+            styles: mapStyle(rest.zoom),
+            mapTypeId: "hybrid",
+            streetViewControl: true,
+        }
+    };
     return (
         <div style={{ height: '100%', width: '100%' }}>
             <GoogleMapReact
@@ -55,3 +56,62 @@ const Map = ({
 }
 
 export default Map;
+
+//remove locality labels (chome etc) when zoomed in
+const mapStyle = (zoom) => [{
+        "elementType": "labels",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "administrative.locality",
+        "stylers": [{
+            "visibility": (zoom > 14) ? "off" : "on"
+        }]
+    },
+    {
+        "featureType": "administrative.land_parcel",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "administrative.neighborhood",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "road",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [{
+            "visibility": "off"
+        }]
+    }
+]

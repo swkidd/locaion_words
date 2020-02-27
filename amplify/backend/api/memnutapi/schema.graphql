@@ -1,10 +1,24 @@
-type MarkerType
+
+type FlashCardMarker
+  @model 
+  @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) 
+  @key(name: "flashCardsByGroup", fields: ["groupId", "id"]) 
+{
+  id: ID!
+  groupId: ID!
+  owner: String!
+  lat: Float!
+  lng: Float!
+  zoom: Int!
+  frontText: String
+  backText: String
+}
+
+type MarkerGroup
   @model 
   @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) 
 {
   id: ID!
-  lat: Float!
-  lng: Float!
-  zoom: Int!
-  text: String
-}
+  name: String!
+  flashCardMarkers: [FlashCardMarker!] @connection( keyName: "flashCardsByGroup", fields: ["id"])
+} 

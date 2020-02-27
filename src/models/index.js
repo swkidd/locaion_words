@@ -4,8 +4,9 @@ import { schema } from './schema';
 
 
 
-const { MarkerType } = initSchema(schema);
+const { FlashCardMarker, MarkerGroup } = initSchema(schema);
 
 export {
-  MarkerType
+  FlashCardMarker,
+  MarkerGroup
 };

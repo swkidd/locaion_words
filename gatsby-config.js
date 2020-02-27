@@ -53,7 +53,8 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    {
+    /*
+    {// really slow
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `gatsby-starter-default`,
@@ -65,6 +66,7 @@ module.exports = {
         icon: `content/assets/gatsby-icon.png`,
       },
     },
+    */
     {
       resolve: `gatsby-plugin-typography`,
       options: {

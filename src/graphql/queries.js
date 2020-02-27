@@ -1,34 +1,163 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getMarkerType = /* GraphQL */ `
-  query GetMarkerType($id: ID!) {
-    getMarkerType(id: $id) {
+export const syncFlashCardMarkers = /* GraphQL */ `
+  query SyncFlashCardMarkers(
+    $filter: ModelFlashCardMarkerFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncFlashCardMarkers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getFlashCardMarker = /* GraphQL */ `
+  query GetFlashCardMarker($id: ID!) {
+    getFlashCardMarker(id: $id) {
       id
+      groupId
+      owner
       lat
       lng
       zoom
-      text
+      frontText
+      backText
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listFlashCardMarkers = /* GraphQL */ `
+  query ListFlashCardMarkers(
+    $filter: ModelFlashCardMarkerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFlashCardMarkers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncMarkerGroups = /* GraphQL */ `
+  query SyncMarkerGroups(
+    $filter: ModelMarkerGroupFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncMarkerGroups(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        flashCardMarkers {
+          nextToken
+          startedAt
+        }
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getMarkerGroup = /* GraphQL */ `
+  query GetMarkerGroup($id: ID!) {
+    getMarkerGroup(id: $id) {
+      id
+      name
+      flashCardMarkers {
+        items {
+          id
+          groupId
+          owner
+          lat
+          lng
+          zoom
+          frontText
+          backText
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
 `;
-export const listMarkerTypes = /* GraphQL */ `
-  query ListMarkerTypes(
-    $filter: ModelMarkerTypeFilterInput
+export const listMarkerGroups = /* GraphQL */ `
+  query ListMarkerGroups(
+    $filter: ModelMarkerGroupFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listMarkerTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMarkerGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        lat
-        lng
-        zoom
-        text
+        name
+        flashCardMarkers {
+          nextToken
+          startedAt
+        }
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       nextToken
+      startedAt
     }
   }
 `;

@@ -7,28 +7,39 @@ import Map, { Marker } from "../components/Map";
 import MarkerForm from "../components/mapeditor/MarkerForm"
 
 import { withAuthenticator } from "aws-amplify-react";
-import { reducer } from "../components/mapeditor/utils/markerstore"
+import { reducer, asyncDispatch } from "../components/mapeditor/utils/markerstore"
 
 const MapEditorPage = ({ data, location }) => {
     const siteTitle = data.site.siteMetadata.title
+    
+    const initState = { markers: [], markerGroups: [], currentGroup: "", currentMarker: {} }
+    const [state, localDispatch] = useReducer(reducer, initState)
+    const dispatch = asyncDispatch(localDispatch) 
+    
     const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
-    
-    const [state, dispatch] = useReducer(reducer, { currentGroup: "", markers: [], markerGroups: []});
     const [modal, setModal] = useState(false);
     const [mapPosition, setMapPosition] = useState({
         center: defaultCenter,
         zoom: defaultZoom,
     });
-
-    const onClick = ({ lat, lng, ...props }) => {
-        /*setState({
-            ...state,
-            markers: [
-                ...state.markers,
-                { id: uuid(), lat, lng, text: "", zoom: state.zoom, saved: false }
-            ]
-        })*/
+    
+    const goToPosition = ({ center, zoom }) => {
+        setMapPosition({ center, zoom })
+    }
+    
+    const onClick = ({ lat, lng }) => {
+        if (state.createPlace) {
+            console.log(state)
+            dispatch({ 
+                ...state.currentMarker,
+                type: "save",
+                markerType: "flashCard",
+                lat, lng,
+                zoom: mapPosition.zoom 
+            })
+            dispatch({ type: "createPlace", value: false })
+        }
     }
 
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
@@ -36,7 +47,11 @@ const MapEditorPage = ({ data, location }) => {
     }
     
     useEffect(() => {
-        dispatch({ type: "listGroups" })
+        dispatch({ type: "listGroups" }) 
+        dispatch({ type: "listMarkers" }) 
+        if (state.markerGroups.length > 1) {
+            dispatch({ type: "currentGroup", id: state.markerGroups[0].id})
+        }
         
         /*    
         const listener = (data) => {
@@ -62,7 +77,7 @@ const MapEditorPage = ({ data, location }) => {
 
     return (
         <Layout location={location} title={siteTitle}>
-            <MarkerForm state={state} dispatch={dispatch} />
+            <MarkerForm goToPosition={goToPosition} state={state} dispatch={dispatch} />
             <div style={{ height: '100%', width: '100%' }}>
                 <Map
                     onChange={onChange}
@@ -71,14 +86,15 @@ const MapEditorPage = ({ data, location }) => {
                     defaultZoom={defaultZoom} 
                     center={mapPosition.center}
                     zoom={mapPosition.zoom}>
-                    {/* markers.map(e => (
-                        <Marker 
+                    {((state || {}).markers || []).map(e => {
+                        console.log(e)
+                        return (<Marker 
                             key={e.id}
                             text={e.text}
                             lat={e.lat}
                             lng={e.lng} 
-                        />
-                    ))*/}
+                        />)
+                    })}
                 </Map>
             </div>
         </Layout>

@@ -5,48 +5,64 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Dropdown from 'react-bootstrap/Dropdown'
 
-const formTypesSelect = (state, setState) => ({
+const markerTypeSelect = (state, setState) => ({
     "flashCard": <FlashCardForm state={state} setState={setState} />
 })
 
-const dummyCreate = dispatch => async () => {
-    await dispatch({
-        type: "save",
-        formType: "flashCard",
-        frontText: "hey",
-        backText: "there",
-        zoom: 12,
-        lat: 1,
-        lng: 1,
-    }) 
-    
-    await dispatch({
+const createMarker = (groupId, frontText, backText, dispatch) => {
+    dispatch({
+        type: "currentMarker",
+        value: {
+            groupId,
+            frontText,
+            backText,
+        }
+    })
+    dispatch({
+        type: "listMarkers"
+    })
+    dispatch({
+        type: "createPlace",
+        value: true
+    })
+}
+
+const dummyCreateGroup = dispatch => () => { 
+    dispatch({
         type: "createGroup",
         name: "group1"
     }) 
+    dispatch({
+        type: "listGroups"
+    })
 }
 
-const MarkerForm = ({state, dispatch = () => {}}) => {
-    const [formType, setFormType] = useState("flashCard")
-    const [markerGroup, setMarkerGroup] = useState("main group")
+const MarkerForm = ({goToPosition, state, dispatch}) => {
+    const [markerType, setMarkerType] = useState("flashCard")
+    const [markerGroup, setMarkerGroup] = useState("")
     const [markerData, setMarkerData] = useState({})
-    console.log(state)
+    const [createButtonVariant, setCBV] = useState("primary")
+    
     return (
         <Form onSubmit={e => e.preventDefault()}>
             <Form.Row>
-                {formTypesSelect(markerData, setMarkerData)[formType]}
+                {markerTypeSelect(markerData, setMarkerData)[markerType]}
                 <Col>
                     <Form.Control
                         size="sm"
                         as="select"
-                        value={formType}
-                        onChange={e => setFormType(e.target.value)}
+                        value={markerType}
+                        onChange={e => setMarkerType(e.target.value)}
                     >
                         <option value="flashCard">flash card</option>
                     </Form.Control>
                 </Col>
                 <Col>
-                    <Button size="sm" variant="primary" type="button" onClick={dummyCreate(dispatch)}>
+                    <Button size="sm" variant={state.createPlace? "success" : "primary"} type="button" onClick={() => {
+                        //depends on marker type
+                        if (!state.currentGroup || !markerData) return
+                        createMarker(state.currentGroup.id, markerData.frontText, markerData.backText, dispatch)
+                    }}>
                         Create
                     </Button>
                 </Col>
@@ -56,7 +72,14 @@ const MarkerForm = ({state, dispatch = () => {}}) => {
                             Markers 
                         </Dropdown.Toggle>
                         <Dropdown.Menu as={SearchMenu(dispatch)}>
-                            {state.markers && state.markers.map(m => <Dropdown.Item as="div">{m.description}</Dropdown.Item>)}
+                            {((state || {}).markers || []).map(m => (
+                                <Dropdown.Item 
+                                    as="div"
+                                    onClick={() => goToPosition({center: {lat: m.lat, lng: m.lng}, zoom: m.zoom})}
+                                >
+                                    {m.frontText}
+                                </Dropdown.Item>
+                            ))}
                         </Dropdown.Menu>
                     </Dropdown>
                 </Col>
@@ -70,7 +93,7 @@ const MarkerForm = ({state, dispatch = () => {}}) => {
                             dispatch({ type: "currentGroup", id: e.target.value })
                         }}
                     >
-                        {state.markerGroups && state.markerGroups.map(mg => (
+                        {((state || {}).markerGroups || []).map(mg => (
                             <option value={mg.id}>{mg.name}</option>
                         ))}
                     </Form.Control>
@@ -80,6 +103,7 @@ const MarkerForm = ({state, dispatch = () => {}}) => {
                         size="sm"
                         variant="secondary"
                         type="button"
+                        onClick={dummyCreateGroup(dispatch)}
                     >
                         New Group 
                     </Button>
@@ -118,7 +142,7 @@ const SearchMenu = dispatch => React.forwardRef(
           autoFocus
           className="mx-3 my-2 w-auto"
           placeholder="Type to filter..."
-          onChange={e => dispatch({ type: "filter", value: e.target.value})}
+          onChange={e => {/*search logic goes here*/}}
         />
         
         <div className="list-unstyled">

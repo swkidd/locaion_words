@@ -5,6 +5,7 @@ import GoogleMapReact from 'google-map-react';
 const markerStyles = {
     height: "auto",
     maxHeight: "300px",
+    height: "50px",
     maxWidth: "300px",
     minWidth: "100px",
     width: "max-content",

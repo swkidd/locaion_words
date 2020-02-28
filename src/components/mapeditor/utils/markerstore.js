@@ -1,3 +1,4 @@
+import React, { useState } from "react"
 
 //import Amplify, { Hub } from "@aws-amplify/core";
 import { DataStore, Predicates } from "@aws-amplify/datastore";
@@ -5,11 +6,16 @@ import { MarkerGroup, FlashCardMarker} from "../../../models";
 
 //add groups delete groups etc
 export const reducer = (state, action) => {
+    console.log(action.type)
     switch(action.type) {
         case 'readGroups':
             return {...state, markerGroups: action.value }
+        case 'currentGroup':
+            const group = state.markerGroups.find(mg => mg.id === action.id)
+            if (!group) return state;
+            return {...state, currentGroup: group}
         case 'addGroup':
-            return {...state, markerGroups: [...state.markerGroups, action.value] }
+            return {...state, markerGroups: [...state.markerGroups, action.value]}
         case 'deleteGroup':
             return {...state, markerGroups: state.markerGroups.filter(mg => mg.id !== action.id)}
         case 'updateGroup':
@@ -28,33 +34,52 @@ export const reducer = (state, action) => {
                 if (m.id === action.id) return {...m, ...action.value}  
                 else return m
             })}
-        default: throw new Error()
+        case 'createPlace':
+            return {...state, createPlace: action.value}
+        case 'currentMarker':
+            return {...state, currentMarker: action.value}
     }
 }
 
-const asyncDispatch = (dispatch, action) => {
+export const asyncDispatch = (dispatch) => (action) => {
+    console.log(action.type)
     switch(action.type) {
         case 'listGroups':
-            console.log("LIST GROUPS")
-            DataStore.query(MarkerGroup, Predicates.ALL).then(mg => {
-                dispatch({type: "readGroups", value: mg})   
+            DataStore.query(MarkerGroup, Predicates.ALL).then(mgs => {
+                dispatch({type: "readGroups", value: mgs.map(mg => ({ name: mg.name, id: mg.id }))})
             });
+            break
+        case 'listMarkers':
+            //have to list based on marker types and group id
+            DataStore.query(FlashCardMarker, Predicates.ALL).then(ms => {
+                dispatch({type: "readMarkers", value: ms.map(m => 
+                    ({
+                        groupId: m.groupId,
+                        lat: m.lat,
+                        lng: m.lng,
+                        zoom: m.zoom,
+                        frontText: m.frontText,
+                        backText: m.backText,
+                    })
+                )})
+            })
+            
+            break
         case 'delete':
-            console.log("DELETE")
             /*
             const toDelete = await DataStore.query(MarkerType, action.id);
             await DataStore.delete(toDelete);
             */
-        case 'update':
-            console.log("UPDATE")
-        case 'query':
-            console.log("QUERY")
+            break
+        case 'update': break
+        case 'query': break
         case 'save':
-            console.log("SAVE")
-            switch(action.formType) {
+            if (!action.groupId) break;
+            console.log(action.markerType)
+            switch(action.markerType) {
                 case 'flashCard':
                     const newMarker = {
-                            groupId: action.currentGroup,
+                            groupId: action.groupId,
                             lat: action.lat,
                             lng: action.lng,
                             zoom: action.zoom,
@@ -64,19 +89,25 @@ const asyncDispatch = (dispatch, action) => {
                     DataStore.save(
                         new FlashCardMarker(newMarker)
                     )
+                    break
                 default: throw new Error();
             }
+            break
         case 'createGroup':
-            console.log("CREATE GROUP")
-            DataStore.save(
+            const resp = DataStore.save(
                 new MarkerGroup({
                     name: action.name
                 })
-            ).then(_ => {
-                dispatch({type: "groups", markerGroups: })   
-            })
-        case 'currentGroup':
-            console.log("CURRENT GROUP")
-        default: throw new Error();
+            )
+            break
+        case 'currentGroup': 
+            dispatch({ type: 'currentGroup', id: action.id })
+            break 
+        case 'createPlace':
+            dispatch({ type: 'createPlace', value: action.value })
+            break
+        case 'currentMarker':
+            dispatch({ type: 'currentMarker', value: action.value })
+            break
     }
 }

@@ -8,6 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 const formTypesSelect = (state, setState) => ({
     "flashCard": <FlashCardForm state={state} setState={setState} />
 })
+
 const dummyCreate = dispatch => async () => {
     await dispatch({
         type: "save",
@@ -18,16 +19,18 @@ const dummyCreate = dispatch => async () => {
         lat: 1,
         lng: 1,
     }) 
+    
     await dispatch({
         type: "createGroup",
         name: "group1"
     }) 
 }
 
-const MarkerForm = ({markerDescriptions = [], dispatch = () => {}}) => {
+const MarkerForm = ({state, dispatch = () => {}}) => {
     const [formType, setFormType] = useState("flashCard")
-    const [markerGroup, setMarkerGroup] = useState("flashCard")
+    const [markerGroup, setMarkerGroup] = useState("main group")
     const [markerData, setMarkerData] = useState({})
+    console.log(state)
     return (
         <Form onSubmit={e => e.preventDefault()}>
             <Form.Row>
@@ -53,7 +56,7 @@ const MarkerForm = ({markerDescriptions = [], dispatch = () => {}}) => {
                             Markers 
                         </Dropdown.Toggle>
                         <Dropdown.Menu as={SearchMenu(dispatch)}>
-                            {markerDescriptions.map(d => <Dropdown.Item as="div">{d}</Dropdown.Item>)}
+                            {state.markers && state.markers.map(m => <Dropdown.Item as="div">{m.description}</Dropdown.Item>)}
                         </Dropdown.Menu>
                     </Dropdown>
                 </Col>
@@ -62,9 +65,14 @@ const MarkerForm = ({markerDescriptions = [], dispatch = () => {}}) => {
                         size="sm"
                         as="select"
                         value={markerGroup}
-                        onChange={e => setMarkerGroup(e.target.value)}
+                        onChange={e => { 
+                            setMarkerGroup(e.target.value)
+                            dispatch({ type: "currentGroup", id: e.target.value })
+                        }}
                     >
-                        <option value="mainGroup">main group</option>
+                        {state.markerGroups && state.markerGroups.map(mg => (
+                            <option value={mg.id}>{mg.name}</option>
+                        ))}
                     </Form.Control>
                 </Col>
                 <Col>

@@ -14,7 +14,7 @@ const MapEditorPage = ({ data, location }) => {
     const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
     
-    const [markers, dispatch] = useReducer(reducer, []);
+    const [state, dispatch] = useReducer(reducer, { currentGroup: "", markers: [], markerGroups: []});
     const [modal, setModal] = useState(false);
     const [mapPosition, setMapPosition] = useState({
         center: defaultCenter,
@@ -33,13 +33,10 @@ const MapEditorPage = ({ data, location }) => {
 
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
         /*setState({ ...state, zoom: zoom, center: center });*/
-        console.log(markers)
-        dispatch({ type: "list" })
     }
     
     useEffect(() => {
-        console.log("use effect");
-        dispatch({ type: "list" })
+        dispatch({ type: "listGroups" })
         
         /*    
         const listener = (data) => {
@@ -65,7 +62,7 @@ const MapEditorPage = ({ data, location }) => {
 
     return (
         <Layout location={location} title={siteTitle}>
-            <MarkerForm dispatch={dispatch} />
+            <MarkerForm state={state} dispatch={dispatch} />
             <div style={{ height: '100%', width: '100%' }}>
                 <Map
                     onChange={onChange}

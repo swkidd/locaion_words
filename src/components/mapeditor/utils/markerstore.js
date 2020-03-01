@@ -11,6 +11,7 @@ export const reducer = (state, action) => {
         case 'readGroups':
             return {...state, markerGroups: action.value }
         case 'currentGroup':
+            if (action.group) return {...state, currentGroup: action.group}
             const group = state.markerGroups.find(mg => mg.id === action.id)
             if (!group) return state;
             return {...state, currentGroup: group}
@@ -41,18 +42,28 @@ export const reducer = (state, action) => {
     }
 }
 
-export const asyncDispatch = (dispatch) => (action) => {
+export const asyncDispatch = (dispatch) => (action, callback = () => {}) => {
     console.log(action.type)
     switch(action.type) {
         case 'listGroups':
             DataStore.query(MarkerGroup, Predicates.ALL).then(mgs => {
-                dispatch({type: "readGroups", value: mgs.map(mg => ({ name: mg.name, id: mg.id }))})
+                const groups = mgs.map(mg => ({ name: mg.name, id: mg.id }))
+                dispatch({type: "readGroups", value: groups})
+                callback(groups)
             });
             break
+        case 'currentGroup': 
+            if (action.group) {
+                dispatch({ type: 'currentGroup', group: action.group })
+                action.id = action.group.id
+            } else {
+                dispatch({ type: 'currentGroup', id: action.id })
+            }
+            // fall through to listMarkers
         case 'listMarkers':
             //have to list based on marker types and group id
-            DataStore.query(FlashCardMarker, Predicates.ALL).then(ms => {
-                dispatch({type: "readMarkers", value: ms.map(m => 
+            DataStore.query(FlashCardMarker, m => m.groupId("eq", action.id)).then(ms => {
+                const markers = ms.map(m => 
                     ({
                         groupId: m.groupId,
                         lat: m.lat,
@@ -61,9 +72,10 @@ export const asyncDispatch = (dispatch) => (action) => {
                         frontText: m.frontText,
                         backText: m.backText,
                     })
-                )})
+                )
+                dispatch({type: "readMarkers", value: markers })
+                callback(markers)
             })
-            
             break
         case 'delete':
             /*
@@ -71,8 +83,10 @@ export const asyncDispatch = (dispatch) => (action) => {
             await DataStore.delete(toDelete);
             */
             break
-        case 'update': break
-        case 'query': break
+        case 'update': 
+            break
+        case 'query': 
+            break
         case 'save':
             if (!action.groupId) break;
             console.log(action.markerType)
@@ -88,21 +102,18 @@ export const asyncDispatch = (dispatch) => (action) => {
                         }
                     DataStore.save(
                         new FlashCardMarker(newMarker)
-                    )
+                    ).then(dispatch({type: "addMarker", value: newMarker}))
                     break
                 default: throw new Error();
             }
             break
         case 'createGroup':
-            const resp = DataStore.save(
+            DataStore.save(
                 new MarkerGroup({
                     name: action.name
                 })
             )
             break
-        case 'currentGroup': 
-            dispatch({ type: 'currentGroup', id: action.id })
-            break 
         case 'createPlace':
             dispatch({ type: 'createPlace', value: action.value })
             break

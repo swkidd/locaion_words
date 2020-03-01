@@ -30,7 +30,6 @@ const MapEditorPage = ({ data, location }) => {
     
     const onClick = ({ lat, lng }) => {
         if (state.createPlace) {
-            console.log(state)
             dispatch({ 
                 ...state.currentMarker,
                 type: "save",
@@ -44,14 +43,17 @@ const MapEditorPage = ({ data, location }) => {
 
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
         /*setState({ ...state, zoom: zoom, center: center });*/
+        console.log(state)
     }
     
     useEffect(() => {
-        dispatch({ type: "listGroups" }) 
-        dispatch({ type: "listMarkers" }) 
-        if (state.markerGroups.length > 1) {
-            dispatch({ type: "currentGroup", id: state.markerGroups[0].id})
-        }
+        dispatch({ type: "listGroups" }, groups => {
+            if (groups.length > 1) {
+                console.log(groups)
+                dispatch({ type: "currentGroup", group: groups[0]})
+            }
+            
+        })
         
         /*    
         const listener = (data) => {
@@ -87,7 +89,6 @@ const MapEditorPage = ({ data, location }) => {
                     center={mapPosition.center}
                     zoom={mapPosition.zoom}>
                     {((state || {}).markers || []).map(e => {
-                        console.log(e)
                         return (<Marker 
                             key={e.id}
                             text={e.text}

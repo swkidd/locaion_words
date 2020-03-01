@@ -52,7 +52,6 @@ const MapEditorPage = ({ data, location }) => {
                 console.log(groups)
                 dispatch({ type: "currentGroup", group: groups[0]})
             }
-            
         })
         
         /*    
@@ -89,12 +88,12 @@ const MapEditorPage = ({ data, location }) => {
                     center={mapPosition.center}
                     zoom={mapPosition.zoom}>
                     {((state || {}).markers || []).map(e => {
-                        return (<Marker 
+                        return <Marker 
                             key={e.id}
                             text={e.text}
                             lat={e.lat}
                             lng={e.lng} 
-                        />)
+                        />
                     })}
                 </Map>
             </div>

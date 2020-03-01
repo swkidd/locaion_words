@@ -45,6 +45,23 @@ export const reducer = (state, action) => {
 export const asyncDispatch = (dispatch) => (action, callback = () => {}) => {
     console.log(action.type)
     switch(action.type) {
+        case 'createGroup':
+            DataStore.query(MarkerGroup, mg => mg.name("eq", action.name)).then(mgs => {
+                if (mgs.length === 0) {
+                    DataStore.save(
+                        new MarkerGroup({
+                            name: action.name
+                        })
+                    ).then(mgs => {
+                        if (mgs[0]) {
+                            const group = { name: mgs[0].name, id: mgs[0].id }
+                            dispatch({ type: "addGroup", value: group })
+                            dispatch({ type: "currentGroup", group: group })
+                        }
+                    })
+                } 
+            });
+            break
         case 'listGroups':
             DataStore.query(MarkerGroup, Predicates.ALL).then(mgs => {
                 const groups = mgs.map(mg => ({ name: mg.name, id: mg.id }))
@@ -106,13 +123,6 @@ export const asyncDispatch = (dispatch) => (action, callback = () => {}) => {
                     break
                 default: throw new Error();
             }
-            break
-        case 'createGroup':
-            DataStore.save(
-                new MarkerGroup({
-                    name: action.name
-                })
-            )
             break
         case 'createPlace':
             dispatch({ type: 'createPlace', value: action.value })

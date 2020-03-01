@@ -6,6 +6,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
+import Accordion from 'react-bootstrap/Accordion'
 
 const markerTypeSelect = (state, setState) => ({
     "flashCard": <FlashCardForm state={state} setState={setState} />
@@ -45,6 +46,19 @@ const onSubmit = (dispatch, state, markerData) => e => {
     createMarker(state.currentGroup.id, markerData.frontText, markerData.backText, dispatch)
 }
 
+const AccordionWrapper = ({children}) => {
+    return (
+        <Accordion>
+            <Accordion.Toggle size="sm" as={Button} variant="dark" className="shadow-none" eventKey="0">
+              &#9776;
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="0">
+                {children}
+            </Accordion.Collapse>
+        </Accordion>
+    )
+}
+
 const MarkerForm = ({ goToPosition, state, dispatch }) => {
     const [markerType, setMarkerType] = useState("flashCard")
     const [markerGroup, setMarkerGroup] = useState("")
@@ -52,100 +66,102 @@ const MarkerForm = ({ goToPosition, state, dispatch }) => {
     const [newGroupName, setNewGroupName] = useState("")
 
     return (
-        <Container className="my-3" fluid>
-            <Row>
-                <Col>
-                    <Form onSubmit={onSubmit(dispatch, state, markerData)}>
-                        <Form.Row>
-                            {markerTypeSelect(markerData, setMarkerData)[markerType]}
-                            <Col>
-                                <Form.Control
-                                    size="sm"
-                                    as="select"
-                                    value={markerType}
-                                    onChange={e => setMarkerType(e.target.value)}
-                                >
-                                    <option value="flashCard">flash card</option>
-                                </Form.Control>
-                            </Col>
-                            <Col>
-                                <Form.Control
-                                    size="sm"
-                                    as="select"
-                                    value={markerGroup}
-                                    onChange={e => { 
-                                        setMarkerGroup(e.target.value)
-                                        dispatch({ type: "currentGroup", id: e.target.value })
-                                    }}
-                                >
-                                {((state || {}).markerGroups || []).map(mg => (
-                                    <option value={mg.id}>{mg.name}</option>
+        <AccordionWrapper>
+            <Container className="my-3" fluid>
+                <Row>
+                    <Col>
+                        <Form onSubmit={onSubmit(dispatch, state, markerData)}>
+                            <Form.Row>
+                                {markerTypeSelect(markerData, setMarkerData)[markerType]}
+                                <Col>
+                                    <Form.Control
+                                        size="sm"
+                                        as="select"
+                                        value={markerType}
+                                        onChange={e => setMarkerType(e.target.value)}
+                                    >
+                                        <option value="flashCard">flash card</option>
+                                    </Form.Control>
+                                </Col>
+                                <Col>
+                                    <Form.Control
+                                        size="sm"
+                                        as="select"
+                                        value={markerGroup}
+                                        onChange={e => { 
+                                            setMarkerGroup(e.target.value)
+                                            dispatch({ type: "currentGroup", id: e.target.value })
+                                        }}
+                                    >
+                                    {((state || {}).markerGroups || []).map(mg => (
+                                        <option value={mg.id}>{mg.name}</option>
+                                    ))}
+                                    </Form.Control>
+                                </Col>
+                                <Col>
+                                    <Button size="sm" variant={state.createPlace ? "success" : "primary"} type="submit">
+                                        Create
+                                    </Button>
+                                </Col>
+                            </Form.Row>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md="auto">
+                        <Dropdown>
+                            <Dropdown.Toggle as={CustomToggle}>
+                                Markers 
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu as={SearchMenu(dispatch)}>
+                                {((state || {}).markers || []).map(m => (
+                                    <Dropdown.Item 
+                                        as="div"
+                                        onClick={() => goToPosition({center: {lat: m.lat, lng: m.lng}, zoom: m.zoom})}
+                                    >
+                                        {m.frontText}
+                                    </Dropdown.Item>
                                 ))}
-                                </Form.Control>
-                            </Col>
-                            <Col>
-                                <Button size="sm" variant={state.createPlace ? "success" : "primary"} type="submit">
-                                    Create
-                                </Button>
-                            </Col>
-                        </Form.Row>
-                    </Form>
-                </Col>
-            </Row>
-            <Row>
-                <Col md="auto">
-                    <Dropdown>
-                        <Dropdown.Toggle as={CustomToggle}>
-                            Markers 
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu as={SearchMenu(dispatch)}>
-                            {((state || {}).markers || []).map(m => (
-                                <Dropdown.Item 
-                                    as="div"
-                                    onClick={() => goToPosition({center: {lat: m.lat, lng: m.lng}, zoom: m.zoom})}
-                                >
-                                    {m.frontText}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Col>
-                <Col md="auto">
-                    <Dropdown>
-                        <Dropdown.Toggle as={CustomToggle}> 
-                            New Group 
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Form onSubmit={createGroup(dispatch, newGroupName)}>
-                                <Form.Row>
-                                    <Col>
-                                        <Form.Control 
-                                            size="sm" 
-                                            className="mx-3 my-2 w-auto"
-                                            placeholder="group name" 
-                                            value={newGroupName || ""}
-                                            onChange={e => 
-                                                setNewGroupName(e.target.value)
-                                            }
-                                        />
-                                    </Col>
-                                    <Col>
-                                        <Button 
-                                            size="sm" 
-                                            variant="primary" 
-                                            type="submit"
-                                            className="mx-3 w-auto"
-                                        >
-                                            Create Group
-                                        </Button>
-                                    </Col>
-                                </Form.Row>
-                            </Form>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Col>
-            </Row>
-        </Container>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Col>
+                    <Col md="auto">
+                        <Dropdown>
+                            <Dropdown.Toggle as={CustomToggle}> 
+                                New Group 
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Form onSubmit={createGroup(dispatch, newGroupName)}>
+                                    <Form.Row>
+                                        <Col>
+                                            <Form.Control 
+                                                size="sm" 
+                                                className="mx-3 my-2 w-auto"
+                                                placeholder="group name" 
+                                                value={newGroupName || ""}
+                                                onChange={e => 
+                                                    setNewGroupName(e.target.value)
+                                                }
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Button 
+                                                size="sm" 
+                                                variant="primary" 
+                                                type="submit"
+                                                className="mx-3 w-auto"
+                                            >
+                                                Create Group
+                                            </Button>
+                                        </Col>
+                                    </Form.Row>
+                                </Form>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Col>
+                </Row>
+            </Container>
+        </AccordionWrapper>
     )
 }
 

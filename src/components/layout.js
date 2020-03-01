@@ -42,7 +42,9 @@ const Layout = ({ location, title, children }) => {
       <h3
         style={{
           fontFamily: `Montserrat, sans-serif`,
-          marginTop: 0,
+          margin: 0,
+          padding: 0,
+          textAlign: "right",
         }}
       >
         <Link
@@ -61,11 +63,12 @@ const Layout = ({ location, title, children }) => {
   return (
     <div
       style={{
+        margin: 0,
         marginLeft: `auto`,
         marginRight: `auto`,
-        padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
+        padding: `${rhythm(0)} ${rhythm(1 / 4)}`,
         height: "100vh",
-        height: "calc(var(--vh, 1vh) * 95)",
+        height: "calc(var(--vh, 1vh) * 100)",
         display: "flex",
         flexDirection: "column",
       }}

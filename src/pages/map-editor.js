@@ -9,6 +9,8 @@ import MarkerForm from "../components/mapeditor/MarkerForm"
 import { withAuthenticator } from "aws-amplify-react";
 import { reducer, asyncDispatch } from "../components/mapeditor/utils/markerstore"
 
+import FlashCardMarker from "../components/mapeditor/markers/FlashCardMarker"
+
 const MapEditorPage = ({ data, location }) => {
     const siteTitle = data.site.siteMetadata.title
     
@@ -42,14 +44,12 @@ const MapEditorPage = ({ data, location }) => {
     }
 
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
-        /*setState({ ...state, zoom: zoom, center: center });*/
-        console.log(state)
+        setMapPosition({ center, zoom }) 
     }
     
     useEffect(() => {
         dispatch({ type: "listGroups" }, groups => {
             if (groups.length > 1) {
-                console.log(groups)
                 dispatch({ type: "currentGroup", group: groups[0]})
             }
         })
@@ -88,9 +88,12 @@ const MapEditorPage = ({ data, location }) => {
                     center={mapPosition.center}
                     zoom={mapPosition.zoom}>
                     {((state || {}).markers || []).map(e => {
-                        return <Marker 
+                        return <FlashCardMarker
                             key={e.id}
-                            text={e.text}
+                            frontText={e.frontText}
+                            backText={e.backText}
+                            zoom={e.zoom}
+                            currentZoom={mapPosition.zoom}
                             lat={e.lat}
                             lng={e.lng} 
                         />

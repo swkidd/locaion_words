@@ -4,6 +4,10 @@ html, body {
   margin: 0;
 }
 
+body {
+  overscroll-behavior-y: contain;
+}
+
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;

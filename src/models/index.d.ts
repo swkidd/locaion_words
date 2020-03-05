@@ -5,10 +5,11 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 export declare class FlashCardMarker {
   readonly id: string;
   readonly groupId: string;
-  readonly owner: string;
+  readonly owner?: string;
   readonly lat: number;
   readonly lng: number;
   readonly zoom: number;
+  readonly order?: number;
   readonly frontText?: string;
   readonly backText?: string;
   constructor(init: ModelInit<FlashCardMarker>);
@@ -18,7 +19,8 @@ export declare class FlashCardMarker {
 export declare class MarkerGroup {
   readonly id: string;
   readonly name: string;
-  readonly flashCardMarkers?: FlashCardMarker[];
+  readonly owner?: string;
+  readonly order?: number;
   constructor(init: ModelInit<MarkerGroup>);
   static copyOf(source: MarkerGroup, mutator: (draft: MutableModel<MarkerGroup>) => MutableModel<MarkerGroup> | void): MarkerGroup;
 }

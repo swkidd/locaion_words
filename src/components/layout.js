@@ -8,8 +8,8 @@ import "./layout.css";
 
 import Amplify from "@aws-amplify/core";
 import aws_exports from "../aws-exports";
-
 Amplify.configure(aws_exports);
+
 const Layout = ({ location, title, children }) => {
   useExactVH();
   
@@ -68,7 +68,7 @@ const Layout = ({ location, title, children }) => {
         marginRight: `auto`,
         padding: `${rhythm(0)} ${rhythm(1 / 4)}`,
         height: "100vh",
-        height: "calc(var(--vh, 1vh) * 100)",
+        height: "calc(var(--vh, 1vh) * 90)",
         display: "flex",
         flexDirection: "column",
       }}

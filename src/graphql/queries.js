@@ -21,6 +21,7 @@ export const syncFlashCardMarkers = /* GraphQL */ `
         lat
         lng
         zoom
+        order
         frontText
         backText
         _version
@@ -41,6 +42,7 @@ export const getFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -67,6 +69,7 @@ export const listFlashCardMarkers = /* GraphQL */ `
         lat
         lng
         zoom
+        order
         frontText
         backText
         _version
@@ -94,14 +97,25 @@ export const syncMarkerGroups = /* GraphQL */ `
       items {
         id
         name
+        owner
+        order
         flashCardMarkers {
-          nextToken
-          startedAt
+          id
+          groupId
+          owner
+          lat
+          lng
+          zoom
+          order
+          frontText
+          backText
+          _version
+          _deleted
+          _lastChangedAt
         }
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt
@@ -113,27 +127,25 @@ export const getMarkerGroup = /* GraphQL */ `
     getMarkerGroup(id: $id) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -147,14 +159,25 @@ export const listMarkerGroups = /* GraphQL */ `
       items {
         id
         name
+        owner
+        order
         flashCardMarkers {
-          nextToken
-          startedAt
+          id
+          groupId
+          owner
+          lat
+          lng
+          zoom
+          order
+          frontText
+          backText
+          _version
+          _deleted
+          _lastChangedAt
         }
         _version
         _deleted
         _lastChangedAt
-        owner
       }
       nextToken
       startedAt

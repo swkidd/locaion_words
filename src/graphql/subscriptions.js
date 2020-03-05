@@ -10,6 +10,7 @@ export const onCreateFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -27,6 +28,7 @@ export const onUpdateFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -44,6 +46,7 @@ export const onDeleteFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -57,27 +60,25 @@ export const onCreateMarkerGroup = /* GraphQL */ `
     onCreateMarkerGroup(owner: $owner) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -86,27 +87,25 @@ export const onUpdateMarkerGroup = /* GraphQL */ `
     onUpdateMarkerGroup(owner: $owner) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -115,27 +114,25 @@ export const onDeleteMarkerGroup = /* GraphQL */ `
     onDeleteMarkerGroup(owner: $owner) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;

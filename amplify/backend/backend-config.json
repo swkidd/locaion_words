@@ -8,7 +8,7 @@
 		}
 	},
 	"api": {
-		"memnutapi": {
+		"apimemnut": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
@@ -22,6 +22,12 @@
 					}
 				}
 			}
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation"
 		}
 	}
 }

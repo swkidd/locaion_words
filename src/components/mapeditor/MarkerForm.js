@@ -48,14 +48,13 @@ const onSubmit = (dispatch, state, markerData) => e => {
 
 const AccordionWrapper = ({children}) => {
     return (
-        <Accordion>
-            <Accordion.Toggle size="sm" as={Button} variant="dark" className="shadow-none" eventKey="0">
-              &#9776;
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="0">
+        <Dropdown className="mb-1">
+            <Dropdown.Toggle size="sm" as={CustomToggle} variant="dark">
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
                 {children}
-            </Accordion.Collapse>
-        </Accordion>
+            </Dropdown.Menu>
+        </Dropdown>
     )
 }
 
@@ -170,6 +169,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     <Button
         size="sm"
         variant="secondary"
+        className="shadow-none"
         ref={ref}
         onClick={e => {
           e.preventDefault();

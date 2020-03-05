@@ -1,5 +1,5 @@
 projects:
-  memnutapi:
+  apimemnut:
     schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js

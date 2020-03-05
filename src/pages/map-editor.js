@@ -30,6 +30,13 @@ const MapEditorPage = ({ data, location }) => {
         setMapPosition({ center, zoom })
     }
     
+    const nextMarker = (i) => {
+        const newIndex = (i + 1) % state.markers.length
+        if (newIndex === i) return;
+        const m = state.markers[newIndex]
+        goToPosition({ center: { lat: m.lat, lng: m.lng }, zoom: m.zoom })
+    }
+    
     const onClick = ({ lat, lng }) => {
         if (state.createPlace) {
             dispatch({ 
@@ -87,7 +94,7 @@ const MapEditorPage = ({ data, location }) => {
                     defaultZoom={defaultZoom} 
                     center={mapPosition.center}
                     zoom={mapPosition.zoom}>
-                    {((state || {}).markers || []).map(e => {
+                    {((state || {}).markers || []).map((e, i) => {
                         return <FlashCardMarker
                             key={e.id}
                             frontText={e.frontText}
@@ -96,6 +103,7 @@ const MapEditorPage = ({ data, location }) => {
                             currentZoom={mapPosition.zoom}
                             lat={e.lat}
                             lng={e.lng} 
+                            nextMarker={() => nextMarker(i)}
                         />
                     })}
                 </Map>

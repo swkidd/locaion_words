@@ -1,8 +1,12 @@
 import React, { useState } from "react"
 
-//import Amplify, { Hub } from "@aws-amplify/core";
 import { DataStore, Predicates } from "@aws-amplify/datastore";
 import { MarkerGroup, FlashCardMarker} from "../../../models";
+
+import Amplify from "@aws-amplify/core";
+import aws_exports from "../../../aws-exports";
+Amplify.configure(aws_exports);
+
 
 //add groups delete groups etc
 export const reducer = (state, action) => {
@@ -86,6 +90,7 @@ export const asyncDispatch = (dispatch) => (action, callback = () => {}) => {
                         lat: m.lat,
                         lng: m.lng,
                         zoom: m.zoom,
+                        order: m.order || 0,
                         frontText: m.frontText,
                         backText: m.backText,
                     })
@@ -114,6 +119,7 @@ export const asyncDispatch = (dispatch) => (action, callback = () => {}) => {
                             lat: action.lat,
                             lng: action.lng,
                             zoom: action.zoom,
+                            order: action.order || 0,
                             frontText: action.frontText,
                             backText: action.backText,
                         }

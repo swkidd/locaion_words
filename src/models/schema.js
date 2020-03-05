@@ -10,16 +10,6 @@ export const schema = {
                     "properties": {}
                 },
                 {
-                    "type": "key",
-                    "properties": {
-                        "name": "flashCardsByGroup",
-                        "fields": [
-                            "groupId",
-                            "id"
-                        ]
-                    }
-                },
-                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -57,7 +47,7 @@ export const schema = {
                     "name": "owner",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "lat": {
@@ -79,6 +69,13 @@ export const schema = {
                     "isArray": false,
                     "type": "Int",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "order": {
+                    "name": "order",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "frontText": {
@@ -140,22 +137,23 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "flashCardMarkers": {
-                    "name": "flashCardMarkers",
-                    "isArray": true,
-                    "type": {
-                        "model": "FlashCardMarker"
-                    },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "groupId"
-                    }
+                    "attributes": []
+                },
+                "order": {
+                    "name": "order",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
                 }
             }
         }
     },
     "enums": {},
-    "version": "520fffe8d5e9c15d466e38d20e096a14"
+    "version": "1a36a83d785993b9414a796593a84f39"
 };

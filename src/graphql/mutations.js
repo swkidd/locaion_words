@@ -13,6 +13,7 @@ export const createFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -33,6 +34,7 @@ export const updateFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -53,6 +55,7 @@ export const deleteFlashCardMarker = /* GraphQL */ `
       lat
       lng
       zoom
+      order
       frontText
       backText
       _version
@@ -69,27 +72,25 @@ export const createMarkerGroup = /* GraphQL */ `
     createMarkerGroup(input: $input, condition: $condition) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -101,27 +102,25 @@ export const updateMarkerGroup = /* GraphQL */ `
     updateMarkerGroup(input: $input, condition: $condition) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;
@@ -133,27 +132,25 @@ export const deleteMarkerGroup = /* GraphQL */ `
     deleteMarkerGroup(input: $input, condition: $condition) {
       id
       name
+      owner
+      order
       flashCardMarkers {
-        items {
-          id
-          groupId
-          owner
-          lat
-          lng
-          zoom
-          frontText
-          backText
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        nextToken
-        startedAt
+        id
+        groupId
+        owner
+        lat
+        lng
+        zoom
+        order
+        frontText
+        backText
+        _version
+        _deleted
+        _lastChangedAt
       }
       _version
       _deleted
       _lastChangedAt
-      owner
     }
   }
 `;

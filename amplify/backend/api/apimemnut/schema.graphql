@@ -1,15 +1,14 @@
-
 type FlashCardMarker
   @model 
   @auth(rules: [{ allow: owner, operations: [create, update, delete] }]) 
-  @key(name: "flashCardsByGroup", fields: ["groupId", "id"]) 
 {
   id: ID!
   groupId: ID!
-  owner: String!
+  owner: String
   lat: Float!
   lng: Float!
   zoom: Int!
+  order: Int
   frontText: String
   backText: String
 }
@@ -20,5 +19,7 @@ type MarkerGroup
 {
   id: ID!
   name: String!
-  flashCardMarkers: [FlashCardMarker!] @connection( keyName: "flashCardsByGroup", fields: ["id"])
+  owner: String
+  order: Int
+  flashCardMarkers: [FlashCardMarker]
 } 

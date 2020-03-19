@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
 
 const markerStyles = (currentZoom, zoom) => {
     //markers are in view for two zooms in and one out 
@@ -11,11 +9,12 @@ const markerStyles = (currentZoom, zoom) => {
     }
 }
 
-const FlashCardMarker = ({ currentZoom, zoom, frontText, backText, nextMarker }) => {
+const FlashCardMarker = ({ currentZoom, zoom, frontText, backText, nextMarker, lat, lng}) => {
     const [showFront, setShowFront] = useState(true)
     return (
-        <Card 
-            style={{...markerStyles(currentZoom, zoom), width: "4rem"}}
+        <div
+            className="font-weight-bold h3"
+            style={{...markerStyles(currentZoom, zoom), width: "1em"}}
             onClick={() => {
                 setShowFront(!showFront)
                 if (nextMarker && !showFront) {
@@ -23,10 +22,8 @@ const FlashCardMarker = ({ currentZoom, zoom, frontText, backText, nextMarker })
                 }
             }}
         >
-            <Card.Body className="font-weight-bold text-justify h3">
-                {showFront ? frontText : backText}
-            </Card.Body>
-        </Card>
+            {showFront ? frontText : backText}
+        </div>
     )
 }
 

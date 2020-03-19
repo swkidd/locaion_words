@@ -8,11 +8,6 @@ import { rhythm, scale } from "../utils/typography"
 
 import Map, { Marker } from "../components/Map";
 
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-
 const BlogPostTemplate = ({ data, pageContext, location }) => {
   const post = data.markdownRemark
   const siteTitle = data.site.siteMetadata.title
@@ -32,8 +27,8 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
   }
 
   const [state, setState] = useState({
-    center: defaultCenter,
-    zoom: defaultZoom,
+    center: { lat: 35.0, lng: 139.0 },
+    zoom: 15,
     markers: [],
   })
 
@@ -70,24 +65,34 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
     //markers are in view for two zooms in and one out 
     const zoomDif = state.zoom - e.zoom;
     const scale = (zoomDif < -1 || zoomDif > 2) ? 0 : 1 + zoomDif / 2;
-    let markerStyle = {}
-    if (e.zoom < 15) {
-      markerStyle = {
-        color: '#d59563',
-        backgroundColor: "inherit",
-      }
-    }
-
+    
     return {
-      ...markerStyle,
+      width: "12em",
+      height: "auto",
+      scroll: "auto",
+      backgroundColor: "white",
       position: "relative",
       zIndex: `${22 - e.zoom}`,
       transform: `translate(-50%, -50%) scale(${scale})`,
     }
   }
+  
+  const inBounds = (i, lat, lng) => {
+    if (i < 1001) return true
+    return false
+    const ret = (
+      state.bounds.nw.lat > lat &&
+      state.bounds.se.lat < lat &&
+      state.bounds.nw.lng < lng &&
+      state.bounds.se.lng > lng
+    )
+    console.log(ret)
+    return ret
+  }
 
   const onChange = ({ center, zoom, bounds, marginBounds }) => {
-    setState({ ...state, zoom: zoom, center: center });
+    setState({ ...state, zoom: zoom, center: center, bounds: bounds });
+    console.log(state)
   }
 
   return (
@@ -128,26 +133,22 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
               center={state.center}
               zoom={state.zoom}
               onChange={onChange}
+              yesIWantToUseGoogleMapApiInternals
+              onGoogleApiLoaded={({ map, maps }) => setState({...state, center: defaultCenter, zoom: defaultZoom }) }
             >
-              {showMap && state.markers.map((e, i) => (
-                  <div
-                      key={e.id}
-                      style={markerStyles(e)}
-                      lat={e.lat}
-                      lng={e.lng} 
-                  >
-                    <OverlayTrigger
-                      placement="top"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={<Tooltip>{e.text}</Tooltip>}
-                    >
-                        <Button
-                          variant="primary"
-                          onClick={moveTo((i + 1) % state.markers.length)}
-                        >next</Button>
-                    </OverlayTrigger>
-                  </div>
-              ))}
+              {showMap && state.markers.map((e, i) => { 
+                  if (inBounds(i, e.lng, e.lat)) { 
+                    return( <div
+                          key={e.id}
+                          style={markerStyles(e)}
+                          lat={e.lat}
+                          lng={e.lng} 
+                      >
+                        {e.text}
+                      </div>
+                    )
+                  }
+              })}
             </Map>
           </div>
           )

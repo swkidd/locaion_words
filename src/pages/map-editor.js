@@ -3,7 +3,7 @@ import { graphql } from "gatsby";
 import { uuid } from "../utils/uuid";
 
 import Layout from "../components/layout";
-import Map, { Marker } from "../components/Map";
+import Map, { Marker, worldConvert } from "../components/Map";
 import MarkerForm from "../components/mapeditor/MarkerForm"
 
 import { withAuthenticator } from "aws-amplify-react";

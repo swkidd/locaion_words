@@ -10,21 +10,22 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Button from 'react-bootstrap/Button'
 
 const WordMarker = ({name, word, kana, en, next, prev, style, goTo}) => {
-    const [state, setState] = useState(0)
-    const onClick = () => setState((state + 1) % 2)
     return ( 
         <Popover 
             placement="top" 
             style={style} 
-            onClick={onClick}>
-            <Popover.Title as="h1" style={{textAlign: "center"}}>
-                {state === 0 ? <ruby>{word}<rt>{kana}</rt></ruby> : en}
+            >
+            <Popover.Title as="h1" style={{textAlign: "center", fontSize: "2rem"}}>
+                <ruby>{word}<rt>{kana}</rt></ruby>
             </Popover.Title>
-            <Popover.Content>
+            <Popover.Content style={{ width: "10em" }}>
+            {/*
                 <ButtonGroup>
                     <Button onClick={() => goTo("words", prev.name)} variant="secondary">{prev.name}</Button>
                     <Button onClick={() => goTo("words", next.name)} variant="secondary">{next.name}</Button>
                 </ButtonGroup>
+            */}
+                {en}
             </Popover.Content>
         </Popover>
     )
@@ -114,7 +115,7 @@ const MapPage = ({ data, location }) => {
     const zoom = 7 
     const prefectureZoom = 7 
     const cityZoom = 15 
-    const wordZoom = 20 
+    const wordZoom = 19 
     const [state, setState] = useState({
         currentPrefecture: "Tokyo",
         currentCity: "",

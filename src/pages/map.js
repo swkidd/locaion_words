@@ -81,6 +81,7 @@ const cityData = (prefecture) => {
                     population: c['population'],
                     lat: c['lat'],
                     lng: c['lng'],
+                    firstWord: (c['words'][0] || {}).kana || "" 
                 }   
         })
         return cities
@@ -147,7 +148,7 @@ const MapPage = ({ data, location }) => {
                     currentCity: markers[0].nameEn 
                 })
             } else {
-                const city = state.markers.filter(m => m.name == key)
+                const city = state.markers.filter(m => m.nameEn == key)
                 if (city.length > 0) {
                     setState({...state,
                         center: { lat: parseFloat(city[0].lat), lng: parseFloat(city[0].lng) },
@@ -241,6 +242,35 @@ const MapPage = ({ data, location }) => {
                     })}
                 </Map>
             </div>
+            <ButtonGroup style={{ width: "100%", overflowX: "auto"}}>
+                {state.group == "city" &&
+                    <Button 
+                        onClick={() => goTo("prefecture", state.currentPrefecture)} 
+                        style={{verticalAlign: "top", size:"sm"}}
+                    >up</Button>
+                }
+                {state.group == "words" &&
+                    <Button 
+                        onClick={() => goTo("city", state.currentCity)} 
+                        style={{verticalAlign: "top", size:"sm"}}
+                    >up</Button>
+                }
+                {state.markers && state.markers.map(m => { 
+                    let txt = ""
+                    let goToParam = ""
+                    if (state.group == "prefecture") {
+                        txt = m.kana
+                        goToParam = m.nameEn
+                    } else if (state.group == "city") {
+                        txt = m.firstWord.substring(0,2)
+                        goToParam = m.nameEn
+                    } else if (state.group == "words") {
+                        txt = m.word[0]
+                        goToParam = m.name
+                    }
+                    return <Button onClick={() => goTo(state.group, goToParam)} style={{verticalAlign: "top", size:"sm"}}>{txt}</Button> 
+                })}
+            </ButtonGroup>
       </Layout>
     );
 }

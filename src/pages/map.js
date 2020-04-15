@@ -116,8 +116,8 @@ const wordData = (prefecture, city) => {
 const prefectureData = Object.keys(loci).map(k => {
     const city = loci[k]
     return ({
-        lat: parseFloat(city.lat),
-        lng: parseFloat(city.lng),
+        lat: city.lat,
+        lng: city.lng,
         name: city.name,
         nameEn: k,
         kana: city.kana,
@@ -138,6 +138,7 @@ const MapPage = ({ data, location }) => {
         currentWord: "",
         center: center,
         zoom: zoom,
+        size: undefined,
         markers: prefectureData,
         group: "prefecture",
         history: [],
@@ -225,7 +226,7 @@ const MapPage = ({ data, location }) => {
             if (city.length > 0) {
                 setState({ ...state,
                     markers: markers,
-                    center: { lat: parseFloat(city[0].lat), lng: parseFloat(city[0].lng) },
+                    center: { lat: city[0].lat, lng: city[0].lng },
                     zoom: cityZoom,
                     group: "city",
                     currentCity: city[0],
@@ -238,10 +239,11 @@ const MapPage = ({ data, location }) => {
             const markers = wordData(state.currentPrefecture.nameEn, state.currentCity.nameEn)
             const word = key === "" ? markers : markers.filter(m => m.name == key)
             if (word.length > 0) {
+                const { center, zoom } = fitBounds(word[0].viewport, state.size)
                 setState({ ...state,
-                    center: { lat: parseFloat(word[0].lat), lng: parseFloat(word[0].lng) },
+                    center: center,
                     markers: markers,
-                    zoom: wordZoom,
+                    zoom: zoom,
                     group: "words",
                     currentWord: word[0],
                     history: newHistory,
@@ -253,37 +255,23 @@ const MapPage = ({ data, location }) => {
     const onClick = args => {}
 
     const onChange = ({ center, zoom, size }) => {
-        const newBounds = {
-            ne: {
-                lat: 35.1823242,
-                lng: 136.8832306298927
-            },
-            sw: {
-                lat: 35.1769238,
-                lng: 136.8805309701073
-            },
-        }
-
-        const { newCenter, newZoom } = fitBounds(newBounds, size)
-        console.log(newCenter, newZoom)
-        setState({ ...state, center: newCenter, zoom: newZoom })
+        setState({ ...state, center, zoom, size })
     }
 
     const Header = () => {
         let txt = ""
         let goToParam = ""
         if (state.group == "prefecture") {
-            txt = state.currentPrefecture.name
+            txt = state.currentPrefecture.nameEn + " : " + state.currentPrefecture.name
         }
         else if (state.group == "city") {
-            txt = state.currentPrefecture.name + " > " + state.currentCity.name
+            txt = state.currentCity.nameEn + " : " + state.currentCity.name
         }
         else if (state.group == "words") {
-            txt = state.currentPrefecture.name + " > " + state.currentCity.name + " > " + state.currentWord.word
+            txt =  state.currentWord.name + " > " + state.currentWord.word
         }
         return (
             <React.Fragment>
-                {/*
                 <h4
                     style={{
                         fontFamily: `Montserrat, sans-serif`,
@@ -294,7 +282,6 @@ const MapPage = ({ data, location }) => {
                 >
                     {txt}
                 </h4>
-                */}
                 <ButtonGroup style={{ width: "100%", overflowX: "auto"}}>
                     {state.history.map(h => { 
                         const hText = 

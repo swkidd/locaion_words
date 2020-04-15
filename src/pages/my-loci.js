@@ -13,11 +13,11 @@ import FlashCardMarker from "../components/mapeditor/markers/FlashCardMarker"
 
 const MapEditorPage = ({ data, location }) => {
     const siteTitle = data.site.siteMetadata.title
-    
+
     const initState = { markers: [], markerGroups: [], currentGroup: "", currentMarker: {} }
     const [state, localDispatch] = useReducer(reducer, initState)
-    const dispatch = asyncDispatch(localDispatch) 
-    
+    const dispatch = asyncDispatch(localDispatch)
+
     const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
     const [modal, setModal] = useState(false);
@@ -25,42 +25,43 @@ const MapEditorPage = ({ data, location }) => {
         center: defaultCenter,
         zoom: defaultZoom,
     });
-    
+
     const goToPosition = ({ center, zoom }) => {
         setMapPosition({ center, zoom })
     }
-    
+
     const nextMarker = (i) => {
         const newIndex = (i + 1) % state.markers.length
         if (newIndex === i) return;
         const m = state.markers[newIndex]
         goToPosition({ center: { lat: m.lat, lng: m.lng }, zoom: m.zoom })
     }
-    
+
     const onClick = ({ lat, lng }) => {
         if (state.createPlace) {
-            dispatch({ 
+            dispatch({
                 ...state.currentMarker,
                 type: "save",
                 markerType: "flashCard",
-                lat, lng,
-                zoom: mapPosition.zoom 
+                lat,
+                lng,
+                zoom: mapPosition.zoom
             })
             dispatch({ type: "createPlace", value: false })
         }
     }
 
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
-        setMapPosition({ center, zoom }) 
+        setMapPosition({ center, zoom })
     }
-    
+
     useEffect(() => {
         dispatch({ type: "listGroups" }, groups => {
             if (groups.length > 1) {
-                dispatch({ type: "currentGroup", group: groups[0]})
+                dispatch({ type: "currentGroup", group: groups[0] })
             }
         })
-        
+
         /*    
         const listener = (data) => {
             if (data.payload.event === "signOut") {
@@ -80,6 +81,23 @@ const MapEditorPage = ({ data, location }) => {
         window.addEventListener("online", handleConnectionChange);
         window.addEventListener("offline", handleConnectionChange);
         */
+
+        function success(pos) {
+            const { latitude, longitude } = pos.coords
+            goToPosition({ center: { lat: latitude, lng: longitude }, zoom: 20})
+        }
+
+        function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+        }
+
+        const options = {
+            enableHighAccuracy: false,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        navigator.geolocation.watchPosition(success, error, options);
         return () => {};
     }, []);
 

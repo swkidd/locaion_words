@@ -19,6 +19,9 @@ const BlogIndex = ({ data, location }) => {
       <Link style={{ marginRight: "1em", boxShadow: `none` }} to="/map-editor/">
         {"Map Editor"}
       </Link>
+      <Link style={{ marginRight: "1em", boxShadow: `none` }} to="/my-loci/">
+        {"My Loci"}
+      </Link>
       {posts.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
         return (

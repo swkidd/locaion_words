@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import Popover from 'react-bootstrap/Popover'
+
 const markerStyles = (currentZoom, zoom) => {
     //markers are in view for two zooms in and one out 
     const zoomDif = currentZoom - zoom;
@@ -9,21 +11,18 @@ const markerStyles = (currentZoom, zoom) => {
     }
 }
 
-const FlashCardMarker = ({ currentZoom, zoom, frontText, backText, nextMarker, lat, lng}) => {
+const FlashCardMarker = ({ style, currentZoom, zoom, frontText, backText, nextMarker, lat, lng}) => {
     const [showFront, setShowFront] = useState(true)
     return (
-        <div
-            className="font-weight-bold h3"
-            style={{...markerStyles(currentZoom, zoom), width: "1em"}}
-            onClick={() => {
-                setShowFront(!showFront)
-                if (nextMarker && !showFront) {
-                    nextMarker()
-                }
-            }}
-        >
-            {showFront ? frontText : backText}
-        </div>
+        <Popover 
+            placement="top" 
+            onClick = {() => setShowFront(!showFront)}
+            style={{...style, overflowWrap: "break-word"}} 
+            >
+            <Popover.Content style={{overflowY: "auto", maxWidth: "100%", fontSize: "2rem" }}>
+                {showFront ? frontText : backText }
+            </Popover.Content>
+        </Popover>
     )
 }
 

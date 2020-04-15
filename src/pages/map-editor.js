@@ -112,7 +112,7 @@ const MapEditorPage = ({ data, location }) => {
     );
 }
 
-export default MapEditorPage;
+export default withAuthenticator(MapEditorPage);
 
 export const pageQuery = graphql `
   query {

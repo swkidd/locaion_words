@@ -24,10 +24,11 @@ const MapEditorPage = ({ data, location }) => {
     const [mapPosition, setMapPosition] = useState({
         center: defaultCenter,
         zoom: defaultZoom,
+        userPosition: { lat: 0, lng: 0 },
     });
 
-    const goToPosition = ({ center, zoom }) => {
-        setMapPosition({ center, zoom })
+    const goToPosition = ({ center, zoom, userPosition = mapPosition.userPosition}) => {
+        setMapPosition({ center, zoom, userPosition})
     }
 
     const nextMarker = (i) => {
@@ -83,8 +84,8 @@ const MapEditorPage = ({ data, location }) => {
         */
 
         function success(pos) {
-            const { latitude, longitude } = pos.coords
-            goToPosition({ center: { lat: latitude, lng: longitude }, zoom: 20})
+            const userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+            goToPosition({ userPosition: userPosition, center: userPosition, zoom: 20})
         }
 
         function error(err) {
@@ -130,7 +131,7 @@ const MapEditorPage = ({ data, location }) => {
     );
 }
 
-export default MapEditorPage;
+export default withAuthenticator(MapEditorPage);
 
 export const pageQuery = graphql `
   query {

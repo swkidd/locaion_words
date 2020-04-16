@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 
 import GoogleMapReact from 'google-map-react';
 
@@ -27,6 +27,7 @@ export const Marker = ({ style, text }) => (
 
 
 const Map = ({
+    setDimensions,
     defaultZoom,
     defaultCenter,
     onClick,
@@ -40,8 +41,16 @@ const Map = ({
             streetViewControl: true,
         }
     };
+    const mapRef = useRef()
+    const onResize = () => {
+        setDimensions(mapRef.current.getBoundingClientRect())
+    }
+    
+    useEffect(() => {
+        onResize()
+    }, [])
     return (
-        <div style={{ height: '100%', width: '100%' }}>
+        <div ref={mapRef} style={{ height: '100%', width: '100%' }}>
             <GoogleMapReact
                 options={mapOptions}
                 onClick={onClick}

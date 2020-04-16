@@ -46,9 +46,9 @@ const onSubmit = (dispatch, state, markerData) => e => {
     createMarker(state.currentGroup.id, markerData.frontText, markerData.backText, dispatch)
 }
 
-const AccordionWrapper = ({children}) => {
+const AccordionWrapper = ({style, children}) => {
     return (
-        <Dropdown className="mb-1">
+        <Dropdown style={style} className="mb-1">
             <Dropdown.Toggle size="sm" as={CustomToggle} variant="dark">
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -58,14 +58,24 @@ const AccordionWrapper = ({children}) => {
     )
 }
 
-const MarkerForm = ({ goToPosition, state, dispatch }) => {
+
+const MarkerForm = ({ style, goToPosition, state, dispatch }) => {
     const [markerType, setMarkerType] = useState("flashCard")
     const [markerGroup, setMarkerGroup] = useState("")
     const [markerData, setMarkerData] = useState({})
     const [newGroupName, setNewGroupName] = useState("")
+    
+    function success(pos) {
+        const userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        goToPosition({ userPosition: userPosition, center: userPosition })
+    }
+    
+    function error(err) {
+        console.warn('ERROR(' + err.code + '): ' + err.message);
+    }
 
     return (
-        <AccordionWrapper>
+        <AccordionWrapper style={style}>
             <Container className="my-3" fluid>
                 <Row>
                     <Col>
@@ -157,6 +167,20 @@ const MarkerForm = ({ goToPosition, state, dispatch }) => {
                                 </Form>
                             </Dropdown.Menu>
                         </Dropdown>
+                    </Col>
+                    <Col>
+                        <Button 
+                            size="sm" 
+                            variant={state.navigatorId ? "success" : "primary"}
+                            type="button"
+                            onClick={ () =>
+                                state.navigatorId ?
+                                dispatch({ type: "clearFollow" }) :
+                                dispatch({ type: "setFollow", success, error })
+                            }
+                        >
+                            Follow 
+                        </Button>
                     </Col>
                 </Row>
             </Container>

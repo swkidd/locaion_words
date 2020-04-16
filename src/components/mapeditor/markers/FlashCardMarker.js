@@ -17,7 +17,7 @@ const FlashCardMarker = ({ style, currentZoom, zoom, frontText, backText, nextMa
         <Popover 
             placement="top" 
             onClick = {() => setShowFront(!showFront)}
-            style={{...style, overflowWrap: "break-word"}} 
+            style={{...style, transform: "translate(0%, -100%)", overflowWrap: "break-word"}} 
             >
             <Popover.Content style={{overflowY: "auto", maxWidth: "100%", fontSize: "2rem" }}>
                 {showFront ? frontText : backText }

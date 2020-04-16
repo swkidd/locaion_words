@@ -7,6 +7,11 @@ import Amplify from "@aws-amplify/core";
 import aws_exports from "../../../aws-exports";
 Amplify.configure(aws_exports);
 
+const navigatorOptions = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+};
 
 //add groups delete groups etc
 export const reducer = (state, action) => {
@@ -43,6 +48,21 @@ export const reducer = (state, action) => {
             return {...state, createPlace: action.value}
         case 'currentMarker':
             return {...state, currentMarker: action.value}
+        case 'setFollow':
+            if (state.navigator) {
+                const id = state.navigator.geolocation.watchPosition(action.success, action.error, navigatorOptions);
+                return {...state, navigatorId: id}
+            }
+            return state
+        case 'clearFollow':
+            if (state.navigator && state.navigatorId) {
+                state.navigator.geolocation.clearWatch(state.navigatorId) 
+                return {...state, navigatorId: undefined }
+            }
+            return state
+        case 'initNavigator':
+            return {...state, navigator: action.value}
+            
     }
 }
 
@@ -135,6 +155,15 @@ export const asyncDispatch = (dispatch) => (action, callback = () => {}) => {
             break
         case 'currentMarker':
             dispatch({ type: 'currentMarker', value: action.value })
+            break
+        case 'setFollow':
+            dispatch({ type: 'setFollow', success: action.success, error: action.error })
+            break
+        case 'clearFollow':
+            dispatch({ type: 'clearFollow' })
+            break
+        case 'initNavigator':
+            dispatch({ type: 'initNavigator', value: action.value})
             break
     }
 }

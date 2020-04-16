@@ -17,18 +17,23 @@ const MapEditorPage = ({ data, location }) => {
     const initState = { markers: [], markerGroups: [], currentGroup: "", currentMarker: {} }
     const [state, localDispatch] = useReducer(reducer, initState)
     const dispatch = asyncDispatch(localDispatch)
+    
+    const [dimensions, setDimensions] = useState(null);
+    
 
     const defaultCenter = { lat: 35.679835, lng: 139.769099 }
     const defaultZoom = 11
-    const [modal, setModal] = useState(false);
+    const [drag, setDrag] = useState(false);
     const [mapPosition, setMapPosition] = useState({
         center: defaultCenter,
         zoom: defaultZoom,
+        bounds: undefined,
+        marginBounds: undefined,
         userPosition: { lat: 0, lng: 0 },
     });
 
-    const goToPosition = ({ center, zoom, userPosition = mapPosition.userPosition}) => {
-        setMapPosition({ center, zoom, userPosition})
+    const goToPosition = pos => {
+        setMapPosition({...mapPosition, ...pos}) 
     }
 
     const nextMarker = (i) => {
@@ -53,16 +58,16 @@ const MapEditorPage = ({ data, location }) => {
     }
 
     const onChange = ({ center, zoom, bounds, marginBounds }) => {
-        setMapPosition({ center, zoom })
+        setMapPosition({...mapPosition, center, zoom, bounds, marginBounds })
     }
-
+    
     useEffect(() => {
         dispatch({ type: "listGroups" }, groups => {
             if (groups.length > 1) {
                 dispatch({ type: "currentGroup", group: groups[0] })
             }
         })
-
+        
         /*    
         const listener = (data) => {
             if (data.payload.event === "signOut") {
@@ -83,36 +88,36 @@ const MapEditorPage = ({ data, location }) => {
         window.addEventListener("offline", handleConnectionChange);
         */
 
-        function success(pos) {
-            const userPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude }
-            goToPosition({ userPosition: userPosition, center: userPosition, zoom: 20})
-        }
-
-        function error(err) {
-            console.warn('ERROR(' + err.code + '): ' + err.message);
-        }
-
-        const options = {
-            enableHighAccuracy: false,
-            timeout: 5000,
-            maximumAge: 0
-        };
-
-        navigator.geolocation.watchPosition(success, error, options);
-        return () => {};
+        dispatch({ type: 'initNavigator', value: navigator })
+        return () => {}
     }, []);
 
     return (
         <Layout location={location} title={siteTitle}>
-            <MarkerForm goToPosition={goToPosition} state={state} dispatch={dispatch} />
+            <MarkerForm 
+                style={{ 
+                    position: "absolute", 
+                    top: (dimensions || {}).top || "1em", 
+                    left: (dimensions || {}).left || "1em", 
+                    zIndex: "1",
+                    width: (mapPosition.size || {}).width || "90vw",
+                }}
+                goToPosition={goToPosition} 
+                state={state} 
+                dispatch={dispatch} 
+            />
             <div style={{ height: '100%', width: '100%' }}>
                 <Map
+                    setDimensions={setDimensions}
                     onChange={onChange}
                     onClick={onClick} 
                     defaultCenter={defaultCenter} 
                     defaultZoom={defaultZoom} 
                     center={mapPosition.center}
-                    zoom={mapPosition.zoom}>
+                    zoom={mapPosition.zoom}
+                    onDrag={() => setDrag(true)}
+                    onDragEnd={() => setDrag(false)}
+                >
                     {((state || {}).markers || []).map((e, i) => {
                         return <FlashCardMarker
                             key={e.id}

@@ -1,4 +1,4 @@
-# Memnut blog site
+
 
 # todo
 
@@ -40,3 +40,5 @@
 Blog posts link to a place which gives information about which elements are stored at the loci
 The blog post can be read independently. Information in the blog posts is stored in street view as map markers on loci.
 blog posts are free, access to street view is for paid subscriptions only.
+
+## THIS PROJECT HAS BEEN DISCONTINUED 
